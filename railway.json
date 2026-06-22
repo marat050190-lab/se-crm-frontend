@@ -1,4 +1,4 @@
 {
   "build": { "builder": "NIXPACKS" },
-  "deploy": { "startCommand": "npm run preview" }
+  "deploy": { "startCommand": "npm run build && npx serve dist -p ${PORT:-3000}" }
 }
