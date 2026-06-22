@@ -1,0 +1,44 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './hooks/useAuth';
+import Sidebar from './components/layout/Sidebar';
+import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
+import LeadsPage from './pages/LeadsPage';
+import LeadDetailPage from './pages/LeadDetailPage';
+import PipelinePage from './pages/PipelinePage';
+import TasksPage from './pages/TasksPage';
+import UsersPage from './pages/UsersPage';
+
+function ProtectedLayout() {
+  const { user, loading } = useAuth();
+  if (loading) return <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100vh', color:'var(--gray-400)' }}>Загрузка...</div>;
+  if (!user) return <Navigate to="/login" replace />;
+  return (
+    <div className="app-layout">
+      <Sidebar />
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/leads" element={<LeadsPage />} />
+          <Route path="/leads/:id" element={<LeadDetailPage />} />
+          <Route path="/pipeline" element={<PipelinePage />} />
+          <Route path="/tasks" element={<TasksPage />} />
+          <Route path="/users" element={<UsersPage />} />
+        </Routes>
+      </main>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/*" element={<ProtectedLayout />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
+}
