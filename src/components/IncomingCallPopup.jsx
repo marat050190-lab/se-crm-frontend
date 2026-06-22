@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import { getPhoneRegion } from '../utils/phoneRegion.js';
 
 const BACKEND_URL = import.meta.env.VITE_API_URL || 'https://se-crm-backend-production.up.railway.app';
 
@@ -25,49 +26,71 @@ export default function IncomingCallPopup() {
 
   return (
     <div style={{ position:'fixed', top:24, right:24, zIndex:9999, display:'flex', flexDirection:'column', gap:12 }}>
-      {calls.map(call => (
-        <div key={call.id} style={{
-          background:'#1a1a2e', border:'1px solid #4ade80',
-          borderRadius:12, padding:'16px 20px', minWidth:300,
-          boxShadow:'0 8px 32px rgba(0,0,0,0.4)'
-        }}>
-          <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:12 }}>
-            <span style={{ fontSize:24 }}>📞</span>
-            <div>
-              <div style={{ color:'#4ade80', fontWeight:700, fontSize:13, textTransform:'uppercase', letterSpacing:1 }}>
-                Входящий звонок
-              </div>
-              <div style={{ color:'#fff', fontWeight:700, fontSize:20, letterSpacing:2 }}>
-                +{call.phone}
+      {calls.map(call => {
+        const region = getPhoneRegion(call.phone);
+        return (
+          <div key={call.id} style={{
+            background:'#0f172a', border:'2px solid #4ade80',
+            borderRadius:16, padding:'18px 20px', minWidth:320,
+            boxShadow:'0 8px 40px rgba(0,0,0,0.5)',
+          }}>
+            {/* Header */}
+            <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:12 }}>
+              <div style={{
+                width:44, height:44, borderRadius:'50%',
+                background:'#4ade8022', display:'flex', alignItems:'center', justifyContent:'center',
+                fontSize:22, flexShrink:0,
+                animation:'pulse 1.5s infinite'
+              }}>📞</div>
+              <div style={{ flex:1 }}>
+                <div style={{ color:'#4ade80', fontWeight:700, fontSize:11, textTransform:'uppercase', letterSpacing:1.5, marginBottom:2 }}>
+                  Входящий звонок
+                </div>
+                <div style={{ color:'#fff', fontWeight:800, fontSize:22, letterSpacing:2, lineHeight:1 }}>
+                  +{call.phone}
+                </div>
+                {region && (
+                  <div style={{ color:'#94a3b8', fontSize:12, marginTop:4 }}>
+                    📍 {region}
+                  </div>
+                )}
               </div>
             </div>
-          </div>
-          <div style={{ display:'flex', gap:8 }}>
-            {call.leadId && (
+
+            {/* Buttons */}
+            <div style={{ display:'flex', gap:8 }}>
+              {call.leadId && (
+                <button
+                  onClick={() => openLead(call)}
+                  style={{
+                    flex:1, background:'#4ade80', color:'#000',
+                    border:'none', borderRadius:10, padding:'10px 0',
+                    fontWeight:700, fontSize:13, cursor:'pointer'
+                  }}
+                >
+                  Открыть лид
+                </button>
+              )}
               <button
-                onClick={() => openLead(call)}
+                onClick={() => dismiss(call.id)}
                 style={{
-                  flex:1, background:'#4ade80', color:'#000',
-                  border:'none', borderRadius:8, padding:'8px 0',
-                  fontWeight:700, fontSize:13, cursor:'pointer'
+                  flex:1, background:'transparent', color:'#64748b',
+                  border:'1px solid #1e293b', borderRadius:10, padding:'10px 0',
+                  fontWeight:600, fontSize:13, cursor:'pointer'
                 }}
               >
-                Открыть лид
+                Закрыть
               </button>
-            )}
-            <button
-              onClick={() => dismiss(call.id)}
-              style={{
-                flex:1, background:'transparent', color:'#9ca3af',
-                border:'1px solid #374151', borderRadius:8, padding:'8px 0',
-                fontWeight:600, fontSize:13, cursor:'pointer'
-              }}
-            >
-              Закрыть
-            </button>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.15); }
+        }
+      `}</style>
     </div>
   );
 }
