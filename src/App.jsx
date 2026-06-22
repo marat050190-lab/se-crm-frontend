@@ -8,6 +8,7 @@ import LeadDetailPage from './pages/LeadDetailPage';
 import PipelinePage from './pages/PipelinePage';
 import TasksPage from './pages/TasksPage';
 import UsersPage from './pages/UsersPage';
+import IncomingCallPopup from './components/IncomingCallPopup';
 
 function ProtectedLayout() {
   const { user, loading } = useAuth();
@@ -26,6 +27,7 @@ function ProtectedLayout() {
           <Route path="/users" element={<UsersPage />} />
         </Routes>
       </main>
+      <IncomingCallPopup />
     </div>
   );
 }
