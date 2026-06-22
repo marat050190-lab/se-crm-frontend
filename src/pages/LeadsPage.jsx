@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../utils/api.jsx';
-import { STATUSES, SERVICE_TYPES, SOURCES } from '../utils/constants.js';
+import { STATUSES, SERVICE_TYPES, SOURCES, CLIENT_TYPES } from '../utils/constants.js';
 
 export default function LeadsPage() {
   const navigate = useNavigate();
@@ -10,7 +10,6 @@ export default function LeadsPage() {
   const [pages, setPages] = useState(1);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('all');
   const [showNewModal, setShowNewModal] = useState(false);
@@ -33,7 +32,6 @@ export default function LeadsPage() {
 
   useEffect(() => { loadLeads(); }, [loadLeads]);
 
-  // Auto-refresh every 30s for new calls
   useEffect(() => {
     const timer = setInterval(loadLeads, 30000);
     return () => clearInterval(timer);
@@ -43,13 +41,9 @@ export default function LeadsPage() {
     <>
       <div className="page-header">
         <h2>Лиды <span className="text-muted" style={{ fontWeight: 400, fontSize: 15 }}>({total})</span></h2>
-        <button className="btn btn-primary" onClick={() => setShowNewModal(true)}>
-          + Новый лид
-        </button>
+        <button className="btn btn-primary" onClick={() => setShowNewModal(true)}>+ Новый лид</button>
       </div>
       <div className="page-body">
-
-        {/* Filters */}
         <div className="filters-bar">
           <input
             className="form-control search-input"
@@ -57,22 +51,15 @@ export default function LeadsPage() {
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
           />
-          <select
-            className="form-control"
-            value={status}
-            onChange={e => { setStatus(e.target.value); setPage(1); }}
-          >
+          <select className="form-control" value={status} onChange={e => { setStatus(e.target.value); setPage(1); }}>
             <option value="all">Все статусы</option>
             {Object.entries(STATUSES).map(([k, v]) => (
               <option key={k} value={k}>{v.label}</option>
             ))}
           </select>
-          <button className="btn btn-secondary btn-sm" onClick={loadLeads}>
-            ↻ Обновить
-          </button>
+          <button className="btn btn-secondary btn-sm" onClick={loadLeads}>↻ Обновить</button>
         </div>
 
-        {/* Table */}
         <div className="card">
           <div className="table-wrap">
             {loading ? (
@@ -89,6 +76,7 @@ export default function LeadsPage() {
                     <th>№</th>
                     <th>Клиент</th>
                     <th>Телефон</th>
+                    <th>Тип</th>
                     <th>Услуга</th>
                     <th>Источник</th>
                     <th>Менеджер</th>
@@ -101,21 +89,24 @@ export default function LeadsPage() {
                     const st = STATUSES[lead.status];
                     const svc = SERVICE_TYPES.find(s => s.value === lead.service_type);
                     return (
-                      <tr key={lead.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/leads/${lead.id}`)}>
-                        <td>
-                          <span className="lead-link">{lead.lead_number}</span>
-                        </td>
+                      <tr key={lead.id} style={{ cursor: 'pointer' }} onClick={() => navigate('/leads/' + lead.id)}>
+                        <td><span className="lead-link">{lead.lead_number}</span></td>
                         <td>
                           {lead.client_name || <span className="text-muted">—</span>}
                           {lead.client_company && <div className="text-muted">{lead.client_company}</div>}
                         </td>
                         <td><span className="phone">{lead.client_phone}</span></td>
+                        <td>
+                          <span className="text-muted">
+                            {lead.client_type === 'legal' ? '🏢' : '👤'}
+                          </span>
+                        </td>
                         <td>{svc?.label || <span className="text-muted">—</span>}</td>
                         <td className="text-muted">{SOURCES[lead.source] || lead.source}</td>
                         <td>{lead.assigned_name || <span className="text-muted">—</span>}</td>
                         <td>
                           <span className="badge" style={{ color: st?.color, background: st?.bg }}>
-                            {st?.label}
+                            {st?.label || lead.status}
                           </span>
                           {lead.pending_tasks > 0 && (
                             <span className="badge" style={{ background: '#FEF3C7', color: '#D97706', marginLeft: 6 }}>
@@ -123,9 +114,7 @@ export default function LeadsPage() {
                             </span>
                           )}
                         </td>
-                        <td className="text-muted">
-                          {new Date(lead.created_at).toLocaleDateString('ru-RU')}
-                        </td>
+                        <td className="text-muted">{new Date(lead.created_at).toLocaleDateString('ru-RU')}</td>
                       </tr>
                     );
                   })}
@@ -135,7 +124,6 @@ export default function LeadsPage() {
           </div>
         </div>
 
-        {/* Pagination */}
         {pages > 1 && (
           <div className="flex gap-2 items-center mt-4">
             <button className="btn btn-secondary btn-sm" onClick={() => setPage(p => Math.max(1, p-1))} disabled={page === 1}>← Назад</button>
@@ -145,13 +133,21 @@ export default function LeadsPage() {
         )}
       </div>
 
-      {showNewModal && <NewLeadModal onClose={() => setShowNewModal(false)} onCreated={(id) => { setShowNewModal(false); navigate(`/leads/${id}`); }} />}
+      {showNewModal && (
+        <NewLeadModal
+          onClose={() => setShowNewModal(false)}
+          onCreated={(id) => { setShowNewModal(false); navigate('/leads/' + id); }}
+        />
+      )}
     </>
   );
 }
 
 function NewLeadModal({ onClose, onCreated }) {
-  const [form, setForm] = useState({ client_phone: '', client_name: '', service_type: '', source: 'call' });
+  const [form, setForm] = useState({
+    client_phone: '', client_name: '', client_company: '',
+    client_type: 'individual', service_type: '', source: 'call'
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -179,6 +175,29 @@ function NewLeadModal({ onClose, onCreated }) {
         </div>
         <div className="modal-body">
           {error && <div className="alert alert-error">{error}</div>}
+
+          {/* Тип клиента */}
+          <div className="form-group">
+            <label className="form-label">Тип клиента</label>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {CLIENT_TYPES.map(ct => (
+                <button
+                  key={ct.value}
+                  onClick={() => set('client_type', ct.value)}
+                  style={{
+                    flex: 1, padding: '8px 0', borderRadius: 8, cursor: 'pointer',
+                    border: form.client_type === ct.value ? '2px solid var(--primary)' : '2px solid var(--gray-200)',
+                    background: form.client_type === ct.value ? 'var(--primary-light, #EFF6FF)' : 'transparent',
+                    fontWeight: form.client_type === ct.value ? 700 : 400,
+                    color: form.client_type === ct.value ? 'var(--primary)' : 'var(--gray-600)',
+                  }}
+                >
+                  {ct.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="form-row">
             <div className="form-group">
               <label className="form-label">Телефон *</label>
@@ -189,6 +208,14 @@ function NewLeadModal({ onClose, onCreated }) {
               <input className="form-control" value={form.client_name} onChange={e => set('client_name', e.target.value)} />
             </div>
           </div>
+
+          {form.client_type === 'legal' && (
+            <div className="form-group">
+              <label className="form-label">Компания</label>
+              <input className="form-control" value={form.client_company} onChange={e => set('client_company', e.target.value)} placeholder="ООО Ромашка" />
+            </div>
+          )}
+
           <div className="form-row">
             <div className="form-group">
               <label className="form-label">Услуга</label>
