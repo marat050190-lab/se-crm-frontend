@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../utils/api.jsx';
-import { STATUSES, SERVICE_TYPES, TASK_TYPES } from '../utils/constants.js';
+import {
+  STATUSES, SERVICE_TYPES, TASK_TYPES, CLIENT_TYPES, SOURCES,
+  DISPATCHER_STATUSES_POSITIVE, DISPATCHER_STATUSES_NEGATIVE, B2B_STATUSES
+} from '../utils/constants.js';
 
 const fmtDate = d => d ? new Date(d).toLocaleDateString('ru-RU') : '—';
 const fmtDateTime = d => d ? new Date(d).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
@@ -20,7 +23,7 @@ export default function LeadDetailPage() {
 
   const load = async () => {
     const [leadRes, usersRes] = await Promise.all([
-      api.get(`/api/leads/${id}`),
+      api.get('/api/leads/' + id),
       api.get('/api/users'),
     ]);
     setData(leadRes.data);
@@ -35,13 +38,14 @@ export default function LeadDetailPage() {
   const { lead, tasks, history } = data;
   const st = STATUSES[lead.status];
   const svc = SERVICE_TYPES.find(s => s.value === lead.service_type);
+  const clientTypeLabel = CLIENT_TYPES.find(c => c.value === lead.client_type)?.label || '—';
 
   const set = (field, val) => setForm(f => ({ ...f, [field]: val }));
 
   const saveForm = async () => {
     setSaving(true);
     try {
-      await api.patch(`/api/leads/${id}`, form);
+      await api.patch('/api/leads/' + id, form);
       await load();
       setEditing(false);
     } catch (err) {
@@ -53,13 +57,13 @@ export default function LeadDetailPage() {
 
   const sendComment = async () => {
     if (!comment.trim()) return;
-    await api.post(`/api/leads/${id}/comment`, { comment });
+    await api.post('/api/leads/' + id + '/comment', { comment });
     setComment('');
     await load();
   };
 
   const completeTask = async (taskId) => {
-    await api.patch(`/api/tasks/${taskId}/done`);
+    await api.patch('/api/tasks/' + taskId + '/done');
     await load();
   };
 
@@ -71,7 +75,8 @@ export default function LeadDetailPage() {
         <div className="flex items-center gap-3">
           <button className="btn btn-ghost btn-sm" onClick={() => navigate('/leads')}>← Назад</button>
           <h2>{lead.lead_number}</h2>
-          <span className="badge" style={{ color: st?.color, background: st?.bg, fontSize: 13 }}>{st?.label}</span>
+          <span className="badge" style={{ color: st?.color, background: st?.bg, fontSize: 13 }}>{st?.label || lead.status}</span>
+          <span className="badge" style={{ background: 'var(--gray-100)', color: 'var(--gray-600)', fontSize: 12 }}>{clientTypeLabel}</span>
         </div>
         <div className="flex gap-2">
           <button className="btn btn-secondary btn-sm" onClick={() => setShowStatusModal(true)}>Изменить статус</button>
@@ -87,10 +92,7 @@ export default function LeadDetailPage() {
       </div>
       <div className="page-body">
         <div className="lead-detail">
-
-          {/* LEFT: Main info */}
           <div>
-
             {/* Contact */}
             <div className="card" style={{ marginBottom: 16 }}>
               <div className="card-header">Контакт</div>
@@ -98,10 +100,22 @@ export default function LeadDetailPage() {
                 <div className="detail-grid">
                   <Field label="Имя" editing={editing} value={form.client_name} onChange={v => set('client_name', v)} placeholder="Иванов Иван" />
                   <Field label="Телефон" editing={editing} value={form.client_phone} onChange={v => set('client_phone', v)} mono />
-                  <Field label="Компания" editing={editing} value={form.client_company} onChange={v => set('client_company', v)} />
+                  {(lead.client_type === 'legal' || form.client_company) && (
+                    <Field label="Компания" editing={editing} value={form.client_company} onChange={v => set('client_company', v)} />
+                  )}
+                  <div className="detail-field">
+                    <div className="df-label">Тип клиента</div>
+                    <div className="df-value">
+                      {editing ? (
+                        <select className="form-control" value={form.client_type || 'individual'} onChange={e => set('client_type', e.target.value)}>
+                          {CLIENT_TYPES.map(ct => <option key={ct.value} value={ct.value}>{ct.label}</option>)}
+                        </select>
+                      ) : clientTypeLabel}
+                    </div>
+                  </div>
                   <div className="detail-field">
                     <div className="df-label">Источник</div>
-                    <div className="df-value">{lead.source === 'call' ? '📞 Звонок' : lead.source === 'site_form' ? '🌐 Сайт' : lead.source}</div>
+                    <div className="df-value">{SOURCES[lead.source] || lead.source}</div>
                   </div>
                 </div>
                 {lead.beeline_call_id && (
@@ -117,7 +131,6 @@ export default function LeadDetailPage() {
             <div className="card" style={{ marginBottom: 16 }}>
               <div className="card-header">Бриф заказа</div>
               <div className="card-body">
-
                 <div className="detail-section">
                   <h3>Общее</h3>
                   <div className="form-row-3">
@@ -135,7 +148,7 @@ export default function LeadDetailPage() {
                       <label className="form-label">Дата переезда</label>
                       {editing
                         ? <input type="date" className="form-control" value={form.move_date?.slice(0,10) || ''} onChange={e => set('move_date', e.target.value)} />
-                        : <div className="df-value">{fmtDate(lead.move_date) || <span className="df-value empty">—</span>}</div>
+                        : <div className="df-value">{fmtDate(lead.move_date)}</div>
                       }
                     </div>
                     <div className="form-group">
@@ -150,7 +163,7 @@ export default function LeadDetailPage() {
                     <div className="form-group">
                       <label className="form-label">Грузчиков</label>
                       {editing
-                        ? <input type="number" className="form-control" value={form.workers_count || ''} onChange={e => set('workers_count', e.target.value)} min="1" max="50" />
+                        ? <input type="number" className="form-control" value={form.workers_count || ''} onChange={e => set('workers_count', e.target.value)} />
                         : <div className="df-value">{lead.workers_count || <span className="df-value empty">—</span>}</div>
                       }
                     </div>
@@ -171,13 +184,12 @@ export default function LeadDetailPage() {
                   </div>
                 </div>
 
-                {/* Address from */}
                 <div className="detail-section">
                   <h3>Откуда</h3>
                   <div className="form-group">
                     <label className="form-label">Адрес</label>
                     {editing
-                      ? <input className="form-control" value={form.address_from || ''} onChange={e => set('address_from', e.target.value)} placeholder="ул. Пушкина, д. 1" />
+                      ? <input className="form-control" value={form.address_from || ''} onChange={e => set('address_from', e.target.value)} />
                       : <div className="df-value">{lead.address_from || <span className="df-value empty">—</span>}</div>
                     }
                   </div>
@@ -203,13 +215,12 @@ export default function LeadDetailPage() {
                   </div>
                 </div>
 
-                {/* Address to */}
                 <div className="detail-section">
                   <h3>Куда</h3>
                   <div className="form-group">
                     <label className="form-label">Адрес</label>
                     {editing
-                      ? <input className="form-control" value={form.address_to || ''} onChange={e => set('address_to', e.target.value)} placeholder="ул. Ленина, д. 5" />
+                      ? <input className="form-control" value={form.address_to || ''} onChange={e => set('address_to', e.target.value)} />
                       : <div className="df-value">{lead.address_to || <span className="df-value empty">—</span>}</div>
                     }
                   </div>
@@ -235,7 +246,6 @@ export default function LeadDetailPage() {
                   </div>
                 </div>
 
-                {/* Extra services */}
                 <div className="detail-section">
                   <h3>Дополнительно</h3>
                   <div className="form-row">
@@ -248,14 +258,13 @@ export default function LeadDetailPage() {
                   </div>
                 </div>
 
-                {/* Price + comment */}
                 <div className="form-row">
                   <div className="form-group">
                     <label className="form-label">Стоимость (руб.)</label>
                     {editing
                       ? <input type="number" className="form-control" value={form.price_estimate || ''} onChange={e => set('price_estimate', e.target.value)} />
                       : <div className="df-value" style={{ fontSize: 18, color: lead.price_estimate ? 'var(--brand)' : undefined }}>
-                          {lead.price_estimate ? `${Number(lead.price_estimate).toLocaleString('ru-RU')} ₽` : <span className="df-value empty">—</span>}
+                          {lead.price_estimate ? Number(lead.price_estimate).toLocaleString('ru-RU') + ' ₽' : <span className="df-value empty">—</span>}
                         </div>
                     }
                   </div>
@@ -284,10 +293,8 @@ export default function LeadDetailPage() {
             </div>
           </div>
 
-          {/* RIGHT: Tasks + History */}
+          {/* RIGHT */}
           <div>
-
-            {/* Tasks */}
             <div className="card" style={{ marginBottom: 16 }}>
               <div className="card-header flex justify-between items-center">
                 Задачи
@@ -306,7 +313,7 @@ export default function LeadDetailPage() {
                         <div>
                           <div className="task-title">{task.title}</div>
                           <div className="text-muted">{task.assigned_name}</div>
-                          {due && <div className={`task-due ${isOverdue ? 'overdue' : ''}`}>{fmtDateTime(due)}</div>}
+                          {due && <div className={'task-due' + (isOverdue ? ' overdue' : '')}>{fmtDateTime(due)}</div>}
                         </div>
                       </div>
                     );
@@ -323,25 +330,19 @@ export default function LeadDetailPage() {
               </div>
             </div>
 
-            {/* Comment input */}
             <div className="card" style={{ marginBottom: 16 }}>
               <div className="card-header">Добавить комментарий</div>
               <div className="card-body">
                 <textarea
-                  className="form-control"
-                  rows={3}
-                  value={comment}
+                  className="form-control" rows={3} value={comment}
                   onChange={e => setComment(e.target.value)}
                   placeholder="Что обсудили с клиентом..."
                   onKeyDown={e => e.key === 'Enter' && e.metaKey && sendComment()}
                 />
-                <button className="btn btn-primary btn-sm mt-2" onClick={sendComment} disabled={!comment.trim()}>
-                  Сохранить
-                </button>
+                <button className="btn btn-primary btn-sm mt-2" onClick={sendComment} disabled={!comment.trim()}>Сохранить</button>
               </div>
             </div>
 
-            {/* History */}
             <div className="card">
               <div className="card-header">История</div>
               <div className="card-body">
@@ -352,7 +353,7 @@ export default function LeadDetailPage() {
                       <div className="timeline-content">
                         <div className="timeline-text">
                           {h.action === 'status_change'
-                            ? <>Статус: <strong>{STATUSES[h.old_value]?.label}</strong> → <strong>{STATUSES[h.new_value]?.label}</strong></>
+                            ? <>Статус: <strong>{STATUSES[h.old_value]?.label || h.old_value}</strong> → <strong>{STATUSES[h.new_value]?.label || h.new_value}</strong></>
                             : h.comment
                           }
                         </div>
@@ -371,7 +372,18 @@ export default function LeadDetailPage() {
       </div>
 
       {showTaskModal && <TaskModal leadId={id} users={users} onClose={() => setShowTaskModal(false)} onCreated={() => { setShowTaskModal(false); load(); }} />}
-      {showStatusModal && <StatusModal currentStatus={lead.status} onClose={() => setShowStatusModal(false)} onChanged={async (status, extra) => { await api.patch(`/api/leads/${id}/status`, { status, ...extra }); setShowStatusModal(false); load(); }} />}
+      {showStatusModal && (
+        <StatusModal
+          currentStatus={lead.status}
+          clientType={lead.client_type}
+          onClose={() => setShowStatusModal(false)}
+          onChanged={async (status, extra) => {
+            await api.patch('/api/leads/' + id + '/status', { status, ...extra });
+            setShowStatusModal(false);
+            load();
+          }}
+        />
+      )}
     </>
   );
 }
@@ -382,7 +394,7 @@ function Field({ label, value, editing, onChange, placeholder, mono }) {
       <div className="df-label">{label}</div>
       {editing
         ? <input className="form-control" value={value || ''} onChange={e => onChange(e.target.value)} placeholder={placeholder} style={mono ? { fontFamily: 'monospace' } : {}} />
-        : <div className={`df-value${!value ? ' empty' : ''}${mono ? ' font-mono' : ''}`}>{value || '—'}</div>
+        : <div className={'df-value' + (!value ? ' empty' : '') + (mono ? ' font-mono' : '')}>{value || '—'}</div>
       }
     </div>
   );
@@ -439,10 +451,32 @@ function TaskModal({ leadId, users, onClose, onCreated }) {
   );
 }
 
-function StatusModal({ currentStatus, onClose, onChanged }) {
+function StatusModal({ currentStatus, clientType, onClose, onChanged }) {
   const [status, setStatus] = useState(currentStatus);
-  const [lostReason, setLostReason] = useState('');
+  const [b2bRejectReason, setB2bRejectReason] = useState('');
   const [postponedUntil, setPostponedUntil] = useState('');
+
+  const StatusGroup = ({ title, statuses }) => (
+    <div style={{ marginBottom: 16 }}>
+      <div style={{ fontSize: 11, color: 'var(--gray-400)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>{title}</div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+        {Object.entries(statuses).map(([k, v]) => (
+          <button
+            key={k}
+            className="btn btn-sm"
+            style={{
+              background: status === k ? v.color : v.bg,
+              color: status === k ? '#fff' : v.color,
+              border: '1px solid ' + v.color
+            }}
+            onClick={() => setStatus(k)}
+          >
+            {v.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
@@ -452,26 +486,10 @@ function StatusModal({ currentStatus, onClose, onChanged }) {
           <button className="btn btn-ghost btn-sm" onClick={onClose}>✕</button>
         </div>
         <div className="modal-body">
-          <div className="form-group">
-            <label className="form-label">Новый статус</label>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
-              {Object.entries(STATUSES).map(([k, v]) => (
-                <button
-                  key={k}
-                  className="btn btn-sm"
-                  style={{ background: status === k ? v.color : v.bg, color: status === k ? '#fff' : v.color, border: `1px solid ${v.color}` }}
-                  onClick={() => setStatus(k)}
-                >
-                  {v.label}
-                </button>
-              ))}
-            </div>
-          </div>
-          {status === 'lost' && (
-            <div className="form-group">
-              <label className="form-label">Причина отказа</label>
-              <textarea className="form-control" rows={2} value={lostReason} onChange={e => setLostReason(e.target.value)} placeholder="Дорого, нашли другую компанию..." />
-            </div>
+          <StatusGroup title="✅ Положительные" statuses={DISPATCHER_STATUSES_POSITIVE} />
+          <StatusGroup title="❌ Отрицательные" statuses={DISPATCHER_STATUSES_NEGATIVE} />
+          {clientType === 'legal' && (
+            <StatusGroup title="🏢 B2B" statuses={B2B_STATUSES} />
           )}
           {status === 'postponed' && (
             <div className="form-group">
@@ -479,10 +497,16 @@ function StatusModal({ currentStatus, onClose, onChanged }) {
               <input type="date" className="form-control" value={postponedUntil} onChange={e => setPostponedUntil(e.target.value)} />
             </div>
           )}
+          {status === 'b2b_rejected' && (
+            <div className="form-group">
+              <label className="form-label">Причина отказа</label>
+              <textarea className="form-control" rows={2} value={b2bRejectReason} onChange={e => setB2bRejectReason(e.target.value)} placeholder="Причина..." />
+            </div>
+          )}
         </div>
         <div className="modal-footer">
           <button className="btn btn-secondary" onClick={onClose}>Отмена</button>
-          <button className="btn btn-primary" onClick={() => onChanged(status, { lost_reason: lostReason, postponed_until: postponedUntil })}>
+          <button className="btn btn-primary" onClick={() => onChanged(status, { b2b_reject_reason: b2bRejectReason, postponed_until: postponedUntil })}>
             Применить
           </button>
         </div>
