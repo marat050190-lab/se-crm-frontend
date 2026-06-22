@@ -3,7 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import api from '../utils/api.jsx';
 import { STATUSES } from '../utils/constants.js';
 
-const PIPELINE_STAGES = ['new', 'in_progress', 'kp_sent', 'negotiation', 'won', 'lost'];
+const PIPELINE_STAGES = [
+  'new', 'in_progress', 'taken',
+  'transferred_mfl', 'transferred_b2b',
+  'b2b_negotiations', 'b2b_approved',
+];
 
 export default function PipelinePage() {
   const navigate = useNavigate();
@@ -27,6 +31,7 @@ export default function PipelinePage() {
         <div className="pipeline">
           {PIPELINE_STAGES.map(stage => {
             const st = STATUSES[stage];
+            if (!st) return null;
             const stageleads = byStatus[stage] || [];
             const total = stageleads.reduce((s, l) => s + (parseFloat(l.price_estimate) || 0), 0);
             return (
@@ -44,10 +49,13 @@ export default function PipelinePage() {
                   <div style={{ textAlign: 'center', padding: '20px 0', fontSize: 12, color: 'var(--gray-400)' }}>—</div>
                 )}
                 {stageleads.map(lead => (
-                  <div className="pipeline-card" key={lead.id} onClick={() => navigate(`/leads/${lead.id}`)}>
+                  <div className="pipeline-card" key={lead.id} onClick={() => navigate('/leads/' + lead.id)}>
                     <div className="pipeline-card-num">{lead.lead_number}</div>
-                    <div className="pipeline-card-name">{lead.client_name || '—'}</div>
+                    <div className="pipeline-card-name">{lead.client_name || lead.client_company || '—'}</div>
                     <div className="pipeline-card-phone">{lead.client_phone}</div>
+                    <div style={{ fontSize: 11, color: 'var(--gray-400)', marginTop: 2 }}>
+                      {lead.client_type === 'legal' ? '🏢' : '👤'}
+                    </div>
                     {lead.price_estimate && (
                       <div className="pipeline-card-price">{Number(lead.price_estimate).toLocaleString('ru-RU')} ₽</div>
                     )}
