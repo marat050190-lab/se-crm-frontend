@@ -1,7 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { io } from 'socket.io-client';
 import api from '../utils/api.jsx';
 import { STATUSES, SERVICE_TYPES, SOURCES, CLIENT_TYPES } from '../utils/constants.js';
+
+const BACKEND_URL = import.meta.env.VITE_API_URL || 'https://se-crm-backend-production.up.railway.app';
 
 export default function LeadsPage() {
   const navigate = useNavigate();
@@ -13,6 +16,7 @@ export default function LeadsPage() {
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('all');
   const [showNewModal, setShowNewModal] = useState(false);
+  const [newLeadFlash, setNewLeadFlash] = useState(null);
 
   const loadLeads = useCallback(async () => {
     setLoading(true);
@@ -36,6 +40,31 @@ export default function LeadsPage() {
     const timer = setInterval(loadLeads, 30000);
     return () => clearInterval(timer);
   }, [loadLeads]);
+
+  // Socket.IO — живые обновления
+  useEffect(() => {
+    const socket = io(BACKEND_URL, { transports: ['websocket', 'polling'] });
+
+    const handleNewLead = (lead) => {
+      if (page === 1 && status === 'all' && !search) {
+        setLeads(prev => {
+          if (prev.find(l => l.id === lead.id)) return prev;
+          return [lead, ...prev.slice(0, 29)];
+        });
+        setTotal(prev => prev + 1);
+        setNewLeadFlash(lead.id);
+        setTimeout(() => setNewLeadFlash(null), 3000);
+      }
+    };
+
+    socket.on('new_lead', handleNewLead);
+    socket.on('new_email_lead', (data) => {
+      // При email лиде просто перезагружаем список
+      if (page === 1) loadLeads();
+    });
+
+    return () => socket.disconnect();
+  }, [page, status, search, loadLeads]);
 
   return (
     <>
@@ -88,8 +117,17 @@ export default function LeadsPage() {
                   {leads.map(lead => {
                     const st = STATUSES[lead.status];
                     const svc = SERVICE_TYPES.find(s => s.value === lead.service_type);
+                    const isNew = newLeadFlash === lead.id;
                     return (
-                      <tr key={lead.id} style={{ cursor: 'pointer' }} onClick={() => navigate('/leads/' + lead.id)}>
+                      <tr
+                        key={lead.id}
+                        style={{
+                          cursor: 'pointer',
+                          background: isNew ? '#f0fdf4' : undefined,
+                          transition: 'background 0.5s'
+                        }}
+                        onClick={() => navigate('/leads/' + lead.id)}
+                      >
                         <td><span className="lead-link">{lead.lead_number}</span></td>
                         <td>
                           {lead.client_name || <span className="text-muted">—</span>}
@@ -175,8 +213,6 @@ function NewLeadModal({ onClose, onCreated }) {
         </div>
         <div className="modal-body">
           {error && <div className="alert alert-error">{error}</div>}
-
-          {/* Тип клиента */}
           <div className="form-group">
             <label className="form-label">Тип клиента</label>
             <div style={{ display: 'flex', gap: 8 }}>
@@ -197,7 +233,6 @@ function NewLeadModal({ onClose, onCreated }) {
               ))}
             </div>
           </div>
-
           <div className="form-row">
             <div className="form-group">
               <label className="form-label">Телефон *</label>
@@ -208,14 +243,12 @@ function NewLeadModal({ onClose, onCreated }) {
               <input className="form-control" value={form.client_name} onChange={e => set('client_name', e.target.value)} />
             </div>
           </div>
-
           {form.client_type === 'legal' && (
             <div className="form-group">
               <label className="form-label">Компания</label>
               <input className="form-control" value={form.client_company} onChange={e => set('client_company', e.target.value)} placeholder="ООО Ромашка" />
             </div>
           )}
-
           <div className="form-row">
             <div className="form-group">
               <label className="form-label">Услуга</label>
