@@ -9,7 +9,7 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <h1>СЭ CRM</h1>
+        <h1>SEcrm</h1>
         <span>Отдел продаж</span>
       </div>
       <nav className="sidebar-nav">
