@@ -30,7 +30,7 @@ export default function DashboardPage() {
       <div className="page-body">
 
         {/* Stats */}
-        <div className="stats-row">
+        <div className="stats-grid">
           {STATUS_ORDER.map(s => (
             <div className="stat-card" key={s}>
               <div className="stat-label">{STATUSES[s]?.label}</div>
