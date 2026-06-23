@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../utils/api.jsx';
 import {
+import AddressInput from '../components/AddressInput';
   STATUSES, SERVICE_TYPES, TASK_TYPES, CLIENT_TYPES, SOURCES,
   DISPATCHER_STATUSES_POSITIVE, DISPATCHER_STATUSES_NEGATIVE, B2B_STATUSES
 } from '../utils/constants.js';
@@ -145,7 +146,7 @@ export default function LeadDetailPage() {
                       }
                     </div>
                     <div className="form-group">
-                      <label className="form-label">Дата переезда</label>
+                      <label className="form-label">Дата работ</label>
                       {editing
                         ? <input type="date" className="form-control" value={form.move_date?.slice(0,10) || ''} onChange={e => set('move_date', e.target.value)} />
                         : <div className="df-value">{fmtDate(lead.move_date)}</div>
@@ -174,13 +175,6 @@ export default function LeadDetailPage() {
                         : <div className="df-value">{lead.hours_estimate || <span className="df-value empty">—</span>}</div>
                       }
                     </div>
-                    <div className="form-group">
-                      <label className="form-label">Объём (м³)</label>
-                      {editing
-                        ? <input type="number" className="form-control" value={form.volume_m3 || ''} onChange={e => set('volume_m3', e.target.value)} step="0.1" />
-                        : <div className="df-value">{lead.volume_m3 || <span className="df-value empty">—</span>}</div>
-                      }
-                    </div>
                   </div>
                 </div>
 
@@ -189,7 +183,7 @@ export default function LeadDetailPage() {
                   <div className="form-group">
                     <label className="form-label">Адрес</label>
                     {editing
-                      ? <input className="form-control" value={form.address_from || ''} onChange={e => set('address_from', e.target.value)} />
+                      ? <AddressInput value={form.address_from} onChange={v => set('address_from', v)} />
                       : <div className="df-value">{lead.address_from || <span className="df-value empty">—</span>}</div>
                     }
                   </div>
@@ -220,7 +214,7 @@ export default function LeadDetailPage() {
                   <div className="form-group">
                     <label className="form-label">Адрес</label>
                     {editing
-                      ? <input className="form-control" value={form.address_to || ''} onChange={e => set('address_to', e.target.value)} />
+                      ? <AddressInput value={form.address_to} onChange={v => set('address_to', v)} />
                       : <div className="df-value">{lead.address_to || <span className="df-value empty">—</span>}</div>
                     }
                   </div>
