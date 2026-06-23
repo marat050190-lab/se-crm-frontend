@@ -112,10 +112,15 @@ function UserModal({ user, onClose, onSaved }) {
     phone: user?.phone || '',
     beeline_extension: user?.beeline_extension || '',
     telegram_id: user?.telegram_id || '',
+    rop_id: user?.rop_id || '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const set = (f, v) => setForm(p => ({ ...p, [f]: v }));
+  const [rops, setRops] = useState([]);
+  useEffect(() => {
+    api.get('/api/users').then(r => setRops(r.data.filter(u => u.role === 'rop'))).catch(() => {});
+  }, []);
 
   const submit = async () => {
     if (!form.name || !form.email) return setError('Заполните обязательные поля');
@@ -188,6 +193,15 @@ function UserModal({ user, onClose, onSaved }) {
             </div>
           </div>
         </div>
+        {['dispatcher','b2b_manager','mfl_manager'].includes(form.role) && (
+          <div className="form-group">
+            <label className="form-label">Руководитель (РОП)</label>
+            <select className="form-control" value={form.rop_id || ''} onChange={e => set('rop_id', e.target.value || null)}>
+              <option value="">— не назначен —</option>
+              {rops.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+            </select>
+          </div>
+        )}
         <div className="modal-footer">
           <button className="btn btn-secondary" onClick={onClose}>Отмена</button>
           <button className="btn btn-primary" onClick={submit} disabled={loading}>
