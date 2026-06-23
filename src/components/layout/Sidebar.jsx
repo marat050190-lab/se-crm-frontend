@@ -25,6 +25,12 @@ export default function Sidebar() {
         <NavLink to="/tasks">
           <span className="nav-icon">✓</span> Мои задачи
         </NavLink>
+          <NavLink to="/clients">
+            <span className="nav-icon">👥</span> Клиенты
+          </NavLink>
+          <NavLink to="/orders">
+            <span className="nav-icon">📋</span> Заявки КС
+          </NavLink>
         {ADMIN_ROLES.includes(user?.role) && (
           <NavLink to="/users">
             <span className="nav-icon">👥</span> Сотрудники

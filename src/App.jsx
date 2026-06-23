@@ -8,6 +8,8 @@ import LeadDetailPage from './pages/LeadDetailPage';
 import PipelinePage from './pages/PipelinePage';
 import TasksPage from './pages/TasksPage';
 import UsersPage from './pages/UsersPage';
+import ClientsPage from './pages/ClientsPage';
+import OrdersPage from './pages/OrdersPage';
 import IncomingCallPopup from './components/IncomingCallPopup';
 
 function ProtectedLayout() {
@@ -25,6 +27,8 @@ function ProtectedLayout() {
           <Route path="/pipeline" element={<PipelinePage />} />
           <Route path="/tasks" element={<TasksPage />} />
           <Route path="/users" element={<UsersPage />} />
+          <Route path="/clients" element={<ClientsPage />} />
+          <Route path="/orders" element={<OrdersPage />} />
         </Routes>
       </main>
       <IncomingCallPopup />
