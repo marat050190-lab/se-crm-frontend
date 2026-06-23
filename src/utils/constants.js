@@ -39,11 +39,16 @@ export const CLIENT_TYPES = [
 ];
 
 export const SERVICE_TYPES = [
-  { value: 'movers',    label: 'Грузчики' },
-  { value: 'move',      label: 'Переезд' },
-  { value: 'rigging',   label: 'Такелаж' },
-  { value: 'outsource', label: 'Аутсорсинг персонала' },
-  { value: 'other',     label: 'Другое' },
+  { value: 'movers',      label: 'Грузчики' },
+  { value: 'move_home',   label: 'Переезд квартирный' },
+  { value: 'move_office', label: 'Переезд офисный' },
+  { value: 'rigging',     label: 'Такелажные работы' },
+  { value: 'garbage',     label: 'Вывоз мусора' },
+  { value: 'outsource',   label: 'Аутсорсинг' },
+  { value: 'workers',     label: 'Разнорабочие' },
+  { value: 'cargo',       label: 'Грузоперевозка' },
+  { value: 'special',     label: 'Спецтехника' },
+  { value: 'other',       label: 'Иное' },
 ];
 
 export const TASK_TYPES = [
