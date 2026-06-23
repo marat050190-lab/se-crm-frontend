@@ -1,8 +1,8 @@
+import AddressInput from '../components/AddressInput';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../utils/api.jsx';
 import {
-import AddressInput from '../components/AddressInput';
   STATUSES, SERVICE_TYPES, TASK_TYPES, CLIENT_TYPES, SOURCES,
   DISPATCHER_STATUSES_POSITIVE, DISPATCHER_STATUSES_NEGATIVE, B2B_STATUSES
 } from '../utils/constants.js';
