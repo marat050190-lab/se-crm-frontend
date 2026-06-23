@@ -1,11 +1,11 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth.jsx';
+import { ROLES } from '../../utils/constants.js';
 
-const ROLE_LABELS = { admin: 'Администратор', rop: 'РОП', manager: 'Менеджер' };
+const ADMIN_ROLES = ['super_admin', 'admin', 'rop', 'cs_head'];
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
-
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
@@ -25,7 +25,7 @@ export default function Sidebar() {
         <NavLink to="/tasks">
           <span className="nav-icon">✓</span> Мои задачи
         </NavLink>
-        {(user?.role === 'admin' || user?.role === 'rop') && (
+        {ADMIN_ROLES.includes(user?.role) && (
           <NavLink to="/users">
             <span className="nav-icon">👥</span> Сотрудники
           </NavLink>
@@ -33,7 +33,7 @@ export default function Sidebar() {
       </nav>
       <div className="sidebar-user">
         <div className="user-name">{user?.name}</div>
-        <div className="user-role">{ROLE_LABELS[user?.role] || user?.role}</div>
+        <div className="user-role">{ROLES[user?.role] || user?.role}</div>
         <button onClick={logout}>Выйти</button>
       </div>
     </aside>
