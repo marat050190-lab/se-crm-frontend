@@ -11,6 +11,7 @@ import UsersPage from './pages/UsersPage';
 import ClientsPage from './pages/ClientsPage';
 import OrdersPage from './pages/OrdersPage';
 import IncomingCallPopup from './components/IncomingCallPopup';
+import DispatcherQueuePage from './pages/DispatcherQueuePage';
 
 function ProtectedLayout() {
   const { user, loading } = useAuth();
@@ -23,6 +24,7 @@ function ProtectedLayout() {
         <Routes>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/leads" element={<LeadsPage />} />
+                <Route path="/queue" element={<DispatcherQueuePage />} />
           <Route path="/leads/:id" element={<LeadDetailPage />} />
           <Route path="/pipeline" element={<PipelinePage />} />
           <Route path="/tasks" element={<TasksPage />} />
