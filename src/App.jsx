@@ -14,6 +14,8 @@ import IncomingCallPopup from './components/IncomingCallPopup';
 import DispatcherQueuePage from './pages/DispatcherQueuePage';
 import PricingPage from './pages/PricingPage';
 import DispatcherStatsPage from './pages/DispatcherStatsPage';
+import ScriptsPage from './pages/ScriptsPage';
+import ScriptsAdminPage from './pages/ScriptsAdminPage';
 
 function ProtectedLayout() {
   const { user, loading } = useAuth();
@@ -35,6 +37,8 @@ function ProtectedLayout() {
           <Route path="/users" element={<UsersPage />} />
           <Route path="/clients" element={<ClientsPage />} />
           <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/scripts" element={<ScriptsPage />} />
+          <Route path="/scripts-admin" element={<ScriptsAdminPage />} />
         </Routes>
       </main>
       <IncomingCallPopup />
