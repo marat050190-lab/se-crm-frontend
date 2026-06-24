@@ -1,3 +1,4 @@
+import B2CCalculator from '../components/B2CCalculator';
 import AddressInput from '../components/AddressInput';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -262,7 +263,10 @@ export default function LeadDetailPage() {
                         </div>
                     }
                   </div>
-                  <div className="form-group">
+                              {editing && (
+              <B2CCalculator form={form} onSetPrice={(price) => set('price_estimate', price)} />
+            )}
+            <div className="form-group">
                     <label className="form-label">Ответственный</label>
                     {editing
                       ? <select className="form-control" value={form.assigned_to || ''} onChange={e => set('assigned_to', e.target.value)}>
