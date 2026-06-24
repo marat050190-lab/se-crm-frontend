@@ -41,6 +41,11 @@ export default function Sidebar() {
             <span className="nav-icon">👥</span> Сотрудники
           </NavLink>
         )}
+        {ADMIN_ROLES.includes(user?.role) && (
+          <NavLink to="/pricing">
+            <span className="nav-icon">💰</span> Прайс
+          </NavLink>
+        )}
       </nav>
       <div className="sidebar-user">
         <div className="user-name">{user?.name}</div>
