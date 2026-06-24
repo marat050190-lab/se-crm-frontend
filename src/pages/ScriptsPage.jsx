@@ -108,7 +108,7 @@ export default function ScriptsPage() {
 
   async function loadScripts() {
     try {
-      const { data } = await api.get('/scripts');
+      const { data } = await api.get('/api/scripts');
       const byCategory = {};
       (data || []).forEach(s => {
         if (!byCategory[s.category]) byCategory[s.category] = [];

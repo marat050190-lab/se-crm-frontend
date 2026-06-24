@@ -23,7 +23,7 @@ export default function ScriptsAdminPage() {
 
   async function loadScripts() {
     try {
-      const { data } = await api.get('/scripts/all');
+      const { data } = await api.get('/api/scripts/all');
       setScripts(data || []);
     } catch (e) { console.error(e); } finally { setLoading(false); }
   }
@@ -48,8 +48,8 @@ export default function ScriptsAdminPage() {
     setSaving(true);
     try {
       const payload = { category: form.category, title: form.title, content: parsedContent, sort_order: parseInt(form.sort_order) || 0, is_active: form.is_active };
-      if (editingId) await api.put('/scripts/' + editingId, payload);
-      else await api.post('/scripts', payload);
+      if (editingId) await api.put('/api/scripts/' + editingId, payload);
+      else await api.post('/api/scripts', payload);
       setShowForm(false);
       await loadScripts();
     } catch (e) { setError('Ошибка сохранения'); } finally { setSaving(false); }
@@ -57,12 +57,12 @@ export default function ScriptsAdminPage() {
 
   async function handleDelete(id) {
     if (!confirm('Удалить этот скрипт?')) return;
-    try { await api.delete('/scripts/' + id); await loadScripts(); }
+    try { await api.delete('/api/scripts/' + id); await loadScripts(); }
     catch (e) { alert('Ошибка удаления'); }
   }
 
   async function toggleActive(script) {
-    try { await api.put('/scripts/' + script.id, { ...script, is_active: !script.is_active }); await loadScripts(); }
+    try { await api.put('/api/scripts/' + script.id, { ...script, is_active: !script.is_active }); await loadScripts(); }
     catch (e) {}
   }
 
