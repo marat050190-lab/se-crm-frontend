@@ -24,6 +24,11 @@ export default function Sidebar() {
             <span className="nav-icon">🚦</span> Очередь
           </NavLink>
         )}
+        {user?.role === 'dispatcher' && (
+          <NavLink to="/my-stats">
+            <span className="nav-icon">📈</span> Мои KPI
+          </NavLink>
+        )}
         <NavLink to="/pipeline">
           <span className="nav-icon">🔄</span> Воронка
         </NavLink>
