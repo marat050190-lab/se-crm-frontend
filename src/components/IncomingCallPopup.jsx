@@ -11,7 +11,12 @@ export default function IncomingCallPopup() {
     const socket = io(BACKEND_URL, { transports: ['websocket', 'polling'] });
     socket.on('connect', () => console.log('Socket connected:', socket.id));
     socket.on('incoming_call', (data) => {
-      setCalls(prev => [...prev, { ...data, id: Date.now() }]);
+      setCalls(prev => {
+        const now = Date.now();
+        const dup = prev.find(c => c.phone === data.phone && now - c.id < 30000);
+        if (dup) return prev;
+        return [...prev, { ...data, id: now }];
+      });
     });
     return () => socket.disconnect();
   }, []);
