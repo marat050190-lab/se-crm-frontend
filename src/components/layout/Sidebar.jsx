@@ -56,6 +56,16 @@ export default function Sidebar() {
             <span className="nav-icon">📞</span> Скрипты
           </NavLink>
         )}
+        {['super_admin', 'admin', 'rop', 'cs_head'].includes(user?.role) && (
+          <NavLink to="/cs-dashboard">
+            <span className="nav-icon">📊</span> Дашборд КС
+          </NavLink>
+        )}
+        {['super_admin', 'admin', 'rop', 'cs_head'].includes(user?.role) && (
+          <NavLink to="/mfl-dashboard">
+            <span className="nav-icon">📊</span> Дашборд МФЛ
+          </NavLink>
+        )}
         {['super_admin', 'admin', 'rop'].includes(user?.role) && (
           <NavLink to="/scripts-admin">
             <span className="nav-icon">📞</span> Скрипты

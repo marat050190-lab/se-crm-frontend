@@ -16,6 +16,8 @@ import PricingPage from './pages/PricingPage';
 import DispatcherStatsPage from './pages/DispatcherStatsPage';
 import ScriptsPage from './pages/ScriptsPage';
 import ScriptsAdminPage from './pages/ScriptsAdminPage';
+import CSDashboardPage from './pages/CSDashboardPage';
+import MFLDashboardPage from './pages/MFLDashboardPage';
 
 function ProtectedLayout() {
   const { user, loading } = useAuth();
@@ -39,6 +41,8 @@ function ProtectedLayout() {
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/scripts" element={<ScriptsPage />} />
           <Route path="/scripts-admin" element={<ScriptsAdminPage />} />
+          <Route path="/cs-dashboard" element={<CSDashboardPage />} />
+          <Route path="/mfl-dashboard" element={<MFLDashboardPage />} />
         </Routes>
       </main>
       <IncomingCallPopup />
