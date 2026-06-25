@@ -17,6 +17,7 @@ const STATUS_FLOW = ['new','invoice','pay_executor','paid','done'];
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
+  const [filesOrder, setFilesOrder] = useState(null);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
