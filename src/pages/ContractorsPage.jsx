@@ -22,17 +22,13 @@ export default function ContractorsPage() {
   useEffect(() => { load(); }, []);
 
   async function load() {
-    try {
-      const data = await api('/contractors');
-      setContractors(data);
-    } catch(e) { console.error(e); }
+    try { const data = await api('/contractors'); setContractors(data); } catch(e) { console.error(e); }
   }
 
   function openAdd() { setForm(empty); setModal('add'); }
   function openEdit(c) { setForm({ ...c, skills: c.skills || [] }); setModal('edit'); }
-
   function toggleSkill(sk) {
-    setForm(f => ({ ...f, skills: f.skills.includes(sk) ? f.skills.filter(s=>s!==sk) : [...f.skills, sk] }));
+    setForm(f => ({ ...f, skills: f.skills.includes(sk) ? f.skills.filter(s => s !== sk) : [...f.skills, sk] }));
   }
 
   async function save() {
@@ -40,7 +36,7 @@ export default function ContractorsPage() {
     setLoading(true);
     try {
       if (modal === 'add') await api('/contractors', { method:'POST', body: JSON.stringify(form) });
-      else await api(`/contractors/${form.id}`, { method:'PUT', body: JSON.stringify(form) });
+      else await api('/contractors/' + form.id, { method:'PUT', body: JSON.stringify(form) });
       await load();
       setModal(null);
     } catch(e) { alert('Ошибка: ' + e.message); }
@@ -53,6 +49,9 @@ export default function ContractorsPage() {
     return matchSearch && matchType;
   });
 
+  const inp = { width:'100%', padding:'9px 12px', border:'1px solid var(--gray-200)', borderRadius:'8px', fontSize:'14px', boxSizing:'border-box' };
+  const lbl = { fontSize:'13px', fontWeight:600, color:'var(--gray-600)', display:'block', marginBottom:'6px' };
+
   return (
     <div style={{ padding: '24px', maxWidth: '1100px' }}>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'24px' }}>
@@ -61,12 +60,12 @@ export default function ContractorsPage() {
       </div>
 
       <div style={{ display:'flex', gap:'12px', marginBottom:'20px' }}>
-        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Поиск по имени или телефону..."
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Поиск по имени или телефону..."
           style={{ flex:1, padding:'10px 14px', border:'1px solid var(--gray-200)', borderRadius:'8px', fontSize:'14px' }} />
-        <select value={typeFilter} onChange={e=>setTypeFilter(e.target.value)}
+        <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
           style={{ padding:'10px 14px', border:'1px solid var(--gray-200)', borderRadius:'8px', fontSize:'14px' }}>
           <option value="all">Все типы</option>
-          {Object.entries(TYPES).map(([v,l])=><option key={v} value={v}>{l}</option>)}
+          {Object.entries(TYPES).map(([v,l]) => <option key={v} value={v}>{l}</option>)}
         </select>
       </div>
 
@@ -74,7 +73,7 @@ export default function ContractorsPage() {
         <table style={{ width:'100%', borderCollapse:'collapse' }}>
           <thead>
             <tr style={{ background:'var(--gray-50)', borderBottom:'1px solid var(--gray-200)' }}>
-              {['ФИО','Телефон','Тип','Специализация','Навыки','Статус',''].map(h=>(
+              {['ФИО','Телефон','Тип','Специализация','Навыки','Статус',''].map(h => (
                 <th key={h} style={{ padding:'12px 16px', textAlign:'left', fontSize:'12px', fontWeight:600, color:'var(--gray-500)', textTransform:'uppercase' }}>{h}</th>
               ))}
             </tr>
@@ -89,28 +88,28 @@ export default function ContractorsPage() {
                 <td style={{ padding:'14px 16px', color:'var(--gray-600)' }}>{c.phone || '—'}</td>
                 <td style={{ padding:'14px 16px' }}>
                   <span style={{ padding:'4px 10px', borderRadius:'20px', fontSize:'12px', fontWeight:600,
-                    background: c.type==='self_employed'?'#EFF6FF': c.type==='ip'?'#F0FDF4':'#FFF7ED',
-                    color: c.type==='self_employed'?'#2563EB': c.type==='ip'?'#16A34A':'#EA580C' }}>
+                    background: c.type==='self_employed' ? '#EFF6FF' : c.type==='ip' ? '#F0FDF4' : '#FFF7ED',
+                    color: c.type==='self_employed' ? '#2563EB' : c.type==='ip' ? '#16A34A' : '#EA580C' }}>
                     {TYPES[c.type]}
                   </span>
                 </td>
                 <td style={{ padding:'14px 16px', color:'var(--gray-600)', textTransform:'capitalize' }}>{c.specialization || '—'}</td>
                 <td style={{ padding:'14px 16px' }}>
                   <div style={{ display:'flex', gap:'4px', flexWrap:'wrap' }}>
-                    {(c.skills||[]).map(sk=>(
+                    {(c.skills||[]).map(sk => (
                       <span key={sk} style={{ padding:'2px 8px', background:'var(--gray-100)', borderRadius:'12px', fontSize:'12px', color:'var(--gray-600)' }}>{sk}</span>
                     ))}
-                    {!(c.skills||[]).length && <span style={{color:'var(--gray-400)'}}>—</span>}
+                    {!(c.skills||[]).length && <span style={{ color:'var(--gray-400)' }}>—</span>}
                   </div>
                 </td>
                 <td style={{ padding:'14px 16px' }}>
                   <span style={{ padding:'4px 10px', borderRadius:'20px', fontSize:'12px', fontWeight:600,
-                    background: c.is_active?'#ECFDF5':'#FEF2F2', color: c.is_active?'#059669':'#DC2626' }}>
+                    background: c.is_active ? '#ECFDF5' : '#FEF2F2', color: c.is_active ? '#059669' : '#DC2626' }}>
                     {c.is_active ? 'Активен' : 'Неактивен'}
                   </span>
                 </td>
                 <td style={{ padding:'14px 16px' }}>
-                  {canEdit && <button onClick={()=>openEdit(c)} style={{ background:'none', border:'none', cursor:'pointer', fontSize:'18px' }}>✏️</button>}
+                  {canEdit && <button onClick={() => openEdit(c)} style={{ background:'none', border:'none', cursor:'pointer', fontSize:'18px' }}>✏️</button>}
                 </td>
               </tr>
             ))}
@@ -121,35 +120,35 @@ export default function ContractorsPage() {
       {modal && (
         <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000 }}>
           <div style={{ background:'#fff', borderRadius:'16px', padding:'28px', width:'560px', maxHeight:'90vh', overflowY:'auto' }}>
-            <h2 style={{ fontSize:'18px', fontWeight:700, marginBottom:'20px' }}>{modal==='add'?'Добавить исполнителя':'Редактировать исполнителя'}</h2>
+            <h2 style={{ fontSize:'18px', fontWeight:700, marginBottom:'20px' }}>{modal === 'add' ? 'Добавить исполнителя' : 'Редактировать исполнителя'}</h2>
 
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'14px' }}>
               <div style={{ gridColumn:'1/-1' }}>
-                <label style={{ fontSize:'13px', fontWeight:600, color:'var(--gray-600)', display:'block', marginBottom:'6px' }}>ФИО *</label>
-                <input value={form.name} onChange={e=>setForm(f=>({...f,name:e.target.value}))} style={inp} />
+                <label style={lbl}>ФИО *</label>
+                <input value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} style={inp} />
               </div>
               <div>
                 <label style={lbl}>Телефон</label>
-                <input value={form.phone||''} onChange={e=>setForm(f=>({...f,phone:e.target.value}))} style={inp} placeholder="+7..." />
+                <input value={form.phone||''} onChange={e => setForm(f => ({...f, phone: e.target.value}))} style={inp} placeholder="+7..." />
               </div>
               <div>
                 <label style={lbl}>Тип</label>
-                <select value={form.type} onChange={e=>setForm(f=>({...f,type:e.target.value}))} style={inp}>
-                  {Object.entries(TYPES).map(([v,l])=><option key={v} value={v}>{l}</option>)}
+                <select value={form.type} onChange={e => setForm(f => ({...f, type: e.target.value}))} style={inp}>
+                  {Object.entries(TYPES).map(([v,l]) => <option key={v} value={v}>{l}</option>)}
                 </select>
               </div>
               <div>
                 <label style={lbl}>Специализация</label>
-                <select value={form.specialization||'грузчик'} onChange={e=>setForm(f=>({...f,specialization:e.target.value}))} style={inp}>
-                  {SPECS.map(s=><option key={s} value={s}>{s}</option>)}
+                <select value={form.specialization||'грузчик'} onChange={e => setForm(f => ({...f, specialization: e.target.value}))} style={inp}>
+                  {SPECS.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
               <div style={{ gridColumn:'1/-1' }}>
                 <label style={lbl}>Навыки</label>
                 <div style={{ display:'flex', gap:'8px', flexWrap:'wrap', marginTop:'4px' }}>
-                  {SKILLS_LIST.map(sk=>(
+                  {SKILLS_LIST.map(sk => (
                     <label key={sk} style={{ display:'flex', alignItems:'center', gap:'6px', cursor:'pointer', fontSize:'13px' }}>
-                      <input type="checkbox" checked={(form.skills||[]).includes(sk)} onChange={()=>toggleSkill(sk)} />
+                      <input type="checkbox" checked={(form.skills||[]).includes(sk)} onChange={() => toggleSkill(sk)} />
                       {sk}
                     </label>
                   ))}
@@ -161,34 +160,36 @@ export default function ContractorsPage() {
               </div>
               <div>
                 <label style={lbl}>ИНН</label>
-                <input value={form.inn||''} onChange={e=>setForm(f=>({...f,inn:e.target.value}))} style={inp} placeholder="123456789012" />
+                <input value={form.inn||''} onChange={e => setForm(f => ({...f, inn: e.target.value}))} style={inp} placeholder="123456789012" />
               </div>
               <div>
                 <label style={lbl}>Номер карты</label>
-                <input value={form.card_number||''} onChange={e=>setForm(f=>({...f,card_number:e.target.value}))} style={inp} placeholder="0000 0000 0000 0000" />
+                <input value={form.card_number||''} onChange={e => setForm(f => ({...f, card_number: e.target.value}))} style={inp} placeholder="0000 0000 0000 0000" />
               </div>
               <div>
                 <label style={lbl}>Телефон СБП</label>
-                <input value={form.sbp_phone||''} onChange={e=>setForm(f=>({...f,sbp_phone:e.target.value}))} style={inp} placeholder="+7..." />
+                <input value={form.sbp_phone||''} onChange={e => setForm(f => ({...f, sbp_phone: e.target.value}))} style={inp} placeholder="+7..." />
               </div>
-              {form.type === 'ip' && <>
-                <div style={{ gridColumn:'1/-1' }}>
-                  <label style={lbl}>Наименование ИП</label>
-                  <input value={form.ip_name||''} onChange={e=>setForm(f=>({...f,ip_name:e.target.value}))} style={inp} placeholder="ИП Иванов Иван Иванович" />
+              {form.type === 'ip' && (
+                <div style={{ gridColumn:'1/-1', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'14px' }}>
+                  <div style={{ gridColumn:'1/-1' }}>
+                    <label style={lbl}>Наименование ИП</label>
+                    <input value={form.ip_name||''} onChange={e => setForm(f => ({...f, ip_name: e.target.value}))} style={inp} placeholder="ИП Иванов Иван Иванович" />
+                  </div>
+                  <div>
+                    <label style={lbl}>Расчётный счёт</label>
+                    <input value={form.bank_account||''} onChange={e => setForm(f => ({...f, bank_account: e.target.value}))} style={inp} placeholder="40802810..." />
+                  </div>
+                  <div>
+                    <label style={lbl}>БИК банка</label>
+                    <input value={form.bank_bik||''} onChange={e => setForm(f => ({...f, bank_bik: e.target.value}))} style={inp} placeholder="044525225" />
+                  </div>
                 </div>
-                <div>
-                  <label style={lbl}>Расчётный счёт</label>
-                  <input value={form.bank_account||''} onChange={e=>setForm(f=>({...f,bank_account:e.target.value}))} style={inp} placeholder="40802810..." />
-                </div>
-                <div>
-                  <label style={lbl}>БИК банка</label>
-                  <input value={form.bank_bik||''} onChange={e=>setForm(f=>({...f,bank_bik:e.target.value}))} style={inp} placeholder="044525225" />
-                </div>
-              </>}
+              )}
               {modal === 'edit' && (
                 <div style={{ gridColumn:'1/-1' }}>
                   <label style={{ display:'flex', alignItems:'center', gap:'8px', cursor:'pointer', fontSize:'14px' }}>
-                    <input type="checkbox" checked={form.is_active} onChange={e=>setForm(f=>({...f,is_active:e.target.checked}))} />
+                    <input type="checkbox" checked={form.is_active} onChange={e => setForm(f => ({...f, is_active: e.target.checked}))} />
                     Активен
                   </label>
                 </div>
@@ -196,7 +197,7 @@ export default function ContractorsPage() {
             </div>
 
             <div style={{ display:'flex', justifyContent:'flex-end', gap:'10px', marginTop:'24px' }}>
-              <button onClick={()=>setModal(null)} style={{ padding:'10px 20px', border:'1px solid var(--gray-200)', borderRadius:'8px', background:'#fff', cursor:'pointer' }}>Отмена</button>
+              <button onClick={() => setModal(null)} style={{ padding:'10px 20px', border:'1px solid var(--gray-200)', borderRadius:'8px', background:'#fff', cursor:'pointer' }}>Отмена</button>
               <button onClick={save} disabled={loading} style={{ padding:'10px 20px', background:'var(--primary)', color:'#fff', border:'none', borderRadius:'8px', cursor:'pointer', fontWeight:600 }}>
                 {loading ? 'Сохранение...' : 'Сохранить'}
               </button>
@@ -207,6 +208,3 @@ export default function ContractorsPage() {
     </div>
   );
 }
-
-const inp = { width:'100%', padding:'9px 12px', border:'1px solid var(--gray-200)', borderRadius:'8px', fontSize:'14px', boxSizing:'border-box' };
-const lbl = { fontSize:'13px', fontWeight:600, color:'var(--gray-600)', display:'block', marginBottom:'6px' };
