@@ -18,11 +18,14 @@ const STATUS_FLOW = ['new','invoice','pay_executor','paid','done'];
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const [filesOrder, setFilesOrder] = useState(null);
+  const [clientModal, setClientModal] = useState(false);
+  const [clientForm, setClientForm] = useState({ name: '', phone: '', client_type: 'individual', company_name: '', inn: '', comment: '' });
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [statusFilter, setStatusFilter] = useState('');
   const empty = { client_id: '', legal_entity: 'ip', service_type: 'Грузчики', work_date: '', address: '', client_rate: '', executor_rate: '', units: 1, calc_scheme: 'ip_nal', payment_method: 'naimix', comment: '' };
+  const emptyClient = { name: '', phone: '', client_type: 'individual', company_name: '', inn: '', comment: '' };
   const [form, setForm] = useState(empty);
   const [preview, setPreview] = useState(null);
 
@@ -42,6 +45,17 @@ export default function OrdersPage() {
     }, 400);
     return () => clearTimeout(t);
   }, [form.client_rate, form.executor_rate, form.units, form.calc_scheme]);
+
+  const saveClient = async () => {
+    if (!clientForm.name) return alert('Укажите имя клиента');
+    try {
+      const r = await api.post('/api/clients', clientForm);
+      setClients(prev => [...prev, r.data]);
+      setForm(f => ({ ...f, client_id: r.data.id }));
+      setClientModal(false);
+      setClientForm(emptyClient);
+    } catch (e) { alert('Ошибка создания клиента'); }
+  };
 
   const save = async () => {
     if (!form.client_id) return alert('Выберите клиента');
@@ -65,10 +79,13 @@ export default function OrdersPage() {
       {showForm && (
         <div style={card}>
           <div style={formGrid}>
-            <select value={form.client_id} onChange={e => setForm({ ...form, client_id: e.target.value })} style={input}>
-              <option value="">— клиент —</option>
-              {clients.map(c => <option key={c.id} value={c.id}>{c.name}{c.phone ? ` (${c.phone})` : ''}</option>)}
-            </select>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <select value={form.client_id} onChange={e => setForm({ ...form, client_id: e.target.value })} style={{ ...input, flex: 1 }}>
+                <option value="">— клиент —</option>
+                {clients.map(c => <option key={c.id} value={c.id}>{c.name}{c.phone ? ` (${c.phone})` : ''}</option>)}
+              </select>
+              <button type="button" onClick={() => setClientModal(true)} style={{ ...input, cursor: 'pointer', whiteSpace: 'nowrap', background: '#f0f9ff', borderColor: '#2563eb', color: '#2563eb' }}>+ Клиент</button>
+            </div>
             <select value={form.legal_entity} onChange={e => setForm({ ...form, legal_entity: e.target.value })} style={input}>
               <option value="ip">ИП Лукманов</option>
               <option value="ooo">ООО СЭ</option>
@@ -153,6 +170,33 @@ export default function OrdersPage() {
             </div>
             <div style={{ marginBottom: 12, color: '#6b7280', fontSize: 14 }}>{filesOrder.client_name || 'Заявка'} · {filesOrder.service_type}</div>
             <FileAttachments entityType="order" entityId={filesOrder.id} />
+          </div>
+        </div>
+      )}
+
+      {clientModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setClientModal(false)}>
+          <div style={{ background: '#fff', borderRadius: 12, padding: 24, width: 420, maxWidth: '90%' }} onClick={e => e.stopPropagation()}>
+            <h2 style={{ marginTop: 0, marginBottom: 16 }}>Новый клиент</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <input placeholder="Имя / контактное лицо *" value={clientForm.name} onChange={e => setClientForm({ ...clientForm, name: e.target.value })} style={input} />
+              <input placeholder="Телефон" value={clientForm.phone} onChange={e => setClientForm({ ...clientForm, phone: e.target.value })} style={input} />
+              <select value={clientForm.client_type} onChange={e => setClientForm({ ...clientForm, client_type: e.target.value })} style={input}>
+                <option value="individual">Физлицо</option>
+                <option value="legal">Юрлицо</option>
+              </select>
+              {clientForm.client_type === 'legal' && (
+                <>
+                  <input placeholder="Название компании" value={clientForm.company_name} onChange={e => setClientForm({ ...clientForm, company_name: e.target.value })} style={input} />
+                  <input placeholder="ИНН" value={clientForm.inn} onChange={e => setClientForm({ ...clientForm, inn: e.target.value })} style={input} />
+                </>
+              )}
+              <input placeholder="Комментарий" value={clientForm.comment} onChange={e => setClientForm({ ...clientForm, comment: e.target.value })} style={input} />
+            </div>
+            <div style={{ display: 'flex', gap: 12, marginTop: 20, justifyContent: 'flex-end' }}>
+              <button onClick={() => setClientModal(false)} style={{ ...input, cursor: 'pointer', background: '#fff' }}>Отмена</button>
+              <button onClick={saveClient} style={btnPrimary}>Создать клиента</button>
+            </div>
           </div>
         </div>
       )}
