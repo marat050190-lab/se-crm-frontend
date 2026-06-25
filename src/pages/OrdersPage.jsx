@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../utils/api.jsx';
+import FileAttachments from '../components/FileAttachments';
 
 const SERVICE_TYPES = ['Грузчики','Переезд квартирный','Переезд офисный','Такелажные работы','Вывоз мусора','Аутсорсинг','Разнорабочие','Грузоперевозка','Спецтехника','Иное'];
 const SCHEMES = [
@@ -128,15 +129,31 @@ export default function OrdersPage() {
                 <td style={{ ...td, color: o.net_profit >= 0 ? '#059669' : '#dc2626', fontWeight: 600 }}>{Number(o.net_profit).toLocaleString('ru')} ₽</td>
                 <td style={td}><span style={badge(o.status)}>{STATUS_LABELS[o.status] || o.status}</span></td>
                 <td style={td}>
-                  <select value={o.status} onChange={e => changeStatus(o.id, e.target.value)} style={{ ...input, padding: '6px 8px', fontSize: 13 }}>
-                    {Object.keys(STATUS_LABELS).map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
-                  </select>
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <select value={o.status} onChange={e => changeStatus(o.id, e.target.value)} style={{ ...input, padding: '6px 8px', fontSize: 13 }}>
+                      {Object.keys(STATUS_LABELS).map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
+                    </select>
+                    <button type="button" onClick={() => setFilesOrder(o)} title="Документы" style={{ ...input, padding: '6px 10px', cursor: 'pointer', background: '#f0f9ff', borderColor: '#2563eb' }}>📎</button>
+                  </div>
                 </td>
               </tr>
             ))}
             {!orders.length && <tr><td colSpan={7} style={{ ...td, textAlign: 'center', color: '#888' }}>Заявок пока нет</td></tr>}
           </tbody>
         </table>
+      )}
+
+      {filesOrder && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setFilesOrder(null)}>
+          <div style={{ background: '#fff', borderRadius: 12, padding: 24, width: 480, maxWidth: '90%' }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <h2 style={{ margin: 0 }}>Документы заявки</h2>
+              <button onClick={() => setFilesOrder(null)} style={{ ...input, cursor: 'pointer', background: '#fff' }}>Закрыть</button>
+            </div>
+            <div style={{ marginBottom: 12, color: '#6b7280', fontSize: 14 }}>{filesOrder.client_name || 'Заявка'} · {filesOrder.service_type}</div>
+            <FileAttachments entityType="order" entityId={filesOrder.id} />
+          </div>
+        </div>
       )}
     </div>
   );

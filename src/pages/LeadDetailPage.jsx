@@ -1,5 +1,6 @@
 import B2CCalculator from '../components/B2CCalculator';
 import AddressInput from '../components/AddressInput';
+import FileAttachments from '../components/FileAttachments';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../utils/api.jsx';
@@ -338,6 +339,13 @@ export default function LeadDetailPage() {
                   onKeyDown={e => e.key === 'Enter' && e.metaKey && sendComment()}
                 />
                 <button className="btn btn-primary btn-sm mt-2" onClick={sendComment} disabled={!comment.trim()}>Сохранить</button>
+              </div>
+            </div>
+
+            <div className="card">
+              <div className="card-header">Документы</div>
+              <div className="card-body">
+                <FileAttachments entityType="lead" entityId={id} />
               </div>
             </div>
 
