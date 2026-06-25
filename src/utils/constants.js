@@ -68,12 +68,14 @@ export const SOURCES = {
 
 // Роли
 export const ROLES = {
-  super_admin: 'Супер-админ',
-  admin:       'Администратор',
-  rop:         'РОП',
-  cs_head:     'Руководитель КС',
-  dispatcher:  'Диспетчер',
-  b2b_manager: 'Менеджер B2B',
-  mfl_manager: 'Менеджер МФЛ',
-  cs_manager:  'Менеджер КС',
+  super_admin:        'Супер-админ',
+  admin:              'Администратор',
+  rop:                'РОП',
+  cs_head:            'Руководитель КС',
+  dispatcher:         'Диспетчер',
+  b2b_manager:        'Менеджер B2B',
+  mfl_manager:        'Менеджер МФЛ',
+  cs_manager:         'Менеджер КС',
+  accountant_cashier: 'Бухгалтер-кассир',
+  accountant:         'Бухгалтер',
 };

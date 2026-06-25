@@ -12,13 +12,15 @@ export default function Sidebar() {
         <h1>SEcrm</h1>
         <span>Отдел продаж</span>
       </div>
-      <nav className="sidebar-nav">
+            <nav className="sidebar-nav">
         <NavLink to="/" end>
           <span className="nav-icon">📊</span> Дашборд
         </NavLink>
-        <NavLink to="/leads">
-          <span className="nav-icon">📋</span> Лиды
-        </NavLink>
+        {['super_admin', 'admin', 'rop', 'cs_head', 'dispatcher', 'b2b_manager', 'mfl_manager'].includes(user?.role) && (
+          <NavLink to="/leads">
+            <span className="nav-icon">📋</span> Лиды
+          </NavLink>
+        )}
         {user?.role === 'dispatcher' && (
           <NavLink to="/queue">
             <span className="nav-icon">🚦</span> Очередь
@@ -29,24 +31,32 @@ export default function Sidebar() {
             <span className="nav-icon">📈</span> Мои KPI
           </NavLink>
         )}
-        <NavLink to="/pipeline">
-          <span className="nav-icon">🔄</span> Воронка
-        </NavLink>
-        <NavLink to="/tasks">
-          <span className="nav-icon">✓</span> Мои задачи
-        </NavLink>
+        {['super_admin', 'admin', 'rop', 'dispatcher', 'b2b_manager'].includes(user?.role) && (
+          <NavLink to="/pipeline">
+            <span className="nav-icon">🔄</span> Воронка
+          </NavLink>
+        )}
+        {!['accountant_cashier', 'accountant'].includes(user?.role) && (
+          <NavLink to="/tasks">
+            <span className="nav-icon">✓</span> Мои задачи
+          </NavLink>
+        )}
+        {['super_admin', 'admin', 'rop', 'cs_head', 'b2b_manager', 'mfl_manager', 'cs_manager'].includes(user?.role) && (
           <NavLink to="/clients">
             <span className="nav-icon">👥</span> Клиенты
           </NavLink>
+        )}
+        {['super_admin', 'admin', 'rop', 'cs_head', 'b2b_manager', 'mfl_manager', 'cs_manager'].includes(user?.role) && (
           <NavLink to="/orders">
             <span className="nav-icon">📋</span> Заявки КС
           </NavLink>
-        {ADMIN_ROLES.includes(user?.role) && (
+        )}
+        {['super_admin', 'admin', 'rop', 'cs_head'].includes(user?.role) && (
           <NavLink to="/users">
             <span className="nav-icon">👥</span> Сотрудники
           </NavLink>
         )}
-        {ADMIN_ROLES.includes(user?.role) && (
+        {['super_admin', 'admin', 'rop'].includes(user?.role) && (
           <NavLink to="/pricing">
             <span className="nav-icon">💰</span> Прайс
           </NavLink>
