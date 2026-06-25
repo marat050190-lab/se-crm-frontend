@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { api } from '../utils/api';
+import api from '../utils/api.jsx';
 
 const TYPES = { self_employed: 'Самозанятый', individual: 'Физлицо', ip: 'ИП' };
 const SPECS = ['грузчик', 'бригадир'];
@@ -22,7 +22,7 @@ export default function ContractorsPage() {
   useEffect(() => { load(); }, []);
 
   async function load() {
-    try { const data = await api('/contractors'); setContractors(data); } catch(e) { console.error(e); }
+    try { const res = await api.get('/contractors'); setContractors(res.data); } catch(e) { console.error(e); }
   }
 
   function openAdd() { setForm(empty); setModal('add'); }
@@ -35,8 +35,8 @@ export default function ContractorsPage() {
     if (!form.name) return alert('Введите ФИО');
     setLoading(true);
     try {
-      if (modal === 'add') await api('/contractors', { method:'POST', body: JSON.stringify(form) });
-      else await api('/contractors/' + form.id, { method:'PUT', body: JSON.stringify(form) });
+      if (modal === 'add') await api.post('/contractors', form);
+      else await api.put('/contractors/' + form.id, form);
       await load();
       setModal(null);
     } catch(e) { alert('Ошибка: ' + e.message); }
