@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../utils/api.jsx';
 import { ROLES } from '../utils/constants.js';
+import { useAuth } from '../hooks/useAuth.jsx';
 
 const ROLE_COLORS = {
   super_admin: { bg: '#FEF3C7', color: '#D97706' },
@@ -14,6 +15,7 @@ const ROLE_COLORS = {
 };
 
 export default function UsersPage() {
+  const { user: currentUser } = useAuth();
   const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editUser, setEditUser] = useState(null);
@@ -87,12 +89,14 @@ export default function UsersPage() {
 
       {showModal && (
         <UserModal
+          currentUser={currentUser}
           onClose={() => setShowModal(false)}
           onSaved={() => { setShowModal(false); load(); }}
         />
       )}
       {editUser && (
         <UserModal
+          currentUser={currentUser}
           user={editUser}
           onClose={() => setEditUser(null)}
           onSaved={() => { setEditUser(null); load(); }}
@@ -102,7 +106,12 @@ export default function UsersPage() {
   );
 }
 
-function UserModal({ user, onClose, onSaved }) {
+function UserModal({ user, onClose, onSaved, currentUser }) {
+  const ROP_ROLES = ['dispatcher', 'b2b_manager', 'mfl_manager'];
+  const CS_HEAD_ROLES = ['cs_manager', 'dispatcher', 'b2b_manager', 'mfl_manager'];
+  const allowedRoles = currentUser?.role === 'rop' ? ROP_ROLES
+    : currentUser?.role === 'cs_head' ? CS_HEAD_ROLES
+    : Object.keys(ROLES);
   const isEdit = !!user;
   const [form, setForm] = useState({
     name: user?.name || '',
@@ -160,7 +169,7 @@ function UserModal({ user, onClose, onSaved }) {
             <div className="form-group">
               <label className="form-label">Роль</label>
               <select className="form-control" value={form.role} onChange={e => set('role', e.target.value)}>
-                {Object.entries(ROLES).map(([k, v]) => (
+                {Object.entries(ROLES).filter(([k]) => allowedRoles.includes(k)).map(([k, v]) => (
                   <option key={k} value={k}>{v}</option>
                 ))}
               </select>
