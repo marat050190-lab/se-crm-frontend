@@ -20,6 +20,9 @@ export default function LeadDetailPage() {
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({});
   const [comment, setComment] = useState('');
+  const [emailForm, setEmailForm] = useState({ to: '', subject: '', text: '' });
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [showEmailForm, setShowEmailForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -68,6 +71,20 @@ export default function LeadDetailPage() {
   const completeTask = async (taskId) => {
     await api.patch('/api/tasks/' + taskId + '/done');
     await load();
+  };
+
+  const sendEmailToClient = async () => {
+    if (!emailForm.to || !emailForm.subject || !emailForm.text) return alert('Заполните все поля');
+    setSendingEmail(true);
+    try {
+      await api.post('/api/leads/' + id + '/send-email', emailForm);
+      setEmailForm({ to: '', subject: '', text: '' });
+      setShowEmailForm(false);
+      load();
+    } catch(e) {
+      alert('Ошибка: ' + (e.response?.data?.error || e.message));
+    }
+    setSendingEmail(false);
   };
 
   const HISTORY_ICONS = { created: '🆕', status_change: '🔄', comment: '💬', field_update: '✏️', task_created: '📌', task_done: '✅' };
@@ -340,6 +357,35 @@ export default function LeadDetailPage() {
                 />
                 <button className="btn btn-primary btn-sm mt-2" onClick={sendComment} disabled={!comment.trim()}>Сохранить</button>
               </div>
+            </div>
+
+            <div className="card">
+              <div className="card-header" style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                <span>Написать письмо клиенту</span>
+                <button className="btn btn-ghost btn-sm" onClick={() => setShowEmailForm(f => !f)}>{showEmailForm ? 'Свернуть' : '✉️ Написать'}</button>
+              </div>
+              {showEmailForm && (
+                <div className="card-body">
+                  <div className="form-group">
+                    <label className="form-label">Кому (email)</label>
+                    <input className="form-control" value={emailForm.to} onChange={e => setEmailForm(f => ({...f, to: e.target.value}))}
+                      placeholder="client@example.com" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Тема</label>
+                    <input className="form-control" value={emailForm.subject} onChange={e => setEmailForm(f => ({...f, subject: e.target.value}))}
+                      placeholder="Re: Ваш запрос" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Текст письма</label>
+                    <textarea className="form-control" rows={6} value={emailForm.text} onChange={e => setEmailForm(f => ({...f, text: e.target.value}))}
+                      placeholder="Добрый день! По вашему запросу..." />
+                  </div>
+                  <button className="btn btn-primary" onClick={sendEmailToClient} disabled={sendingEmail}>
+                    {sendingEmail ? 'Отправка...' : '📧 Отправить'}
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="card">
