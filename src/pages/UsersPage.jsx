@@ -116,6 +116,7 @@ function UserModal({ user, onClose, onSaved }) {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPwd, setShowPwd] = useState(false);
   const set = (f, v) => setForm(p => ({ ...p, [f]: v }));
   const [rops, setRops] = useState([]);
   useEffect(() => {
@@ -143,7 +144,7 @@ function UserModal({ user, onClose, onSaved }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+    <div className="modal-overlay">
       <div className="modal">
         <div className="modal-header">
           <h3>{isEdit ? 'Редактировать сотрудника' : 'Новый сотрудник'}</h3>
@@ -172,7 +173,10 @@ function UserModal({ user, onClose, onSaved }) {
             </div>
             <div className="form-group">
               <label className="form-label">{isEdit ? 'Новый пароль (если нужно сменить)' : 'Пароль *'}</label>
-              <input type="password" className="form-control" value={form.password} onChange={e => set('password', e.target.value)} placeholder={isEdit ? 'Оставьте пустым чтобы не менять' : ''} />
+              <div style={{ position:'relative', display:'flex', alignItems:'center' }}>
+                <input type={showPwd ? 'text' : 'password'} className="form-control" value={form.password} onChange={e => set('password', e.target.value)} placeholder={isEdit ? 'Оставьте пустым чтобы не менять' : ''} style={{ paddingRight:40 }} />
+                <button type="button" onClick={() => setShowPwd(p => !p)} style={{ position:'absolute', right:10, background:'none', border:'none', cursor:'pointer', fontSize:16, color:'#6b7280' }}>{showPwd ? '🙈' : '👁'}</button>
+              </div>
             </div>
           </div>
           <div className="form-row">

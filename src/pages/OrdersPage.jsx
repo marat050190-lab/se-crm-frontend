@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../utils/api.jsx';
 import FileAttachments from '../components/FileAttachments';
+import AddressInput from '../components/AddressInput';
 
 const SERVICE_TYPES = ['Грузчики','Переезд квартирный','Переезд офисный','Такелажные работы','Вывоз мусора','Аутсорсинг','Разнорабочие','Грузоперевозка','Спецтехника','Иное'];
 const SCHEMES = [
@@ -96,7 +97,7 @@ export default function OrdersPage() {
               {SERVICE_TYPES.map(s => <option key={s} value={s}>{s}</option>)}
             </select>
             <input type="date" value={form.work_date} onChange={e => setForm({ ...form, work_date: e.target.value })} style={input} />
-            <input placeholder="Адрес" value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} style={input} />
+            <AddressInput value={form.address} onChange={v => setForm({ ...form, address: v })} />
             <select value={form.calc_scheme} onChange={e => setForm({ ...form, calc_scheme: e.target.value })} style={input}>
               {SCHEMES.map(s => <option key={s.v} value={s.v}>{s.l}</option>)}
             </select>
