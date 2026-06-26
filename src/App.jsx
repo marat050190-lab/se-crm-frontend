@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import Sidebar from './components/layout/Sidebar';
@@ -26,12 +27,20 @@ import ClientDetailPage from './pages/ClientDetailPage';
 
 function ProtectedLayout() {
   const { user, loading } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
   if (loading) return <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100vh', color:'var(--gray-400)' }}>Загрузка...</div>;
   if (!user) return <Navigate to="/login" replace />;
   return (
     <div className="app-layout">
-      <Sidebar />
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="main-content">
+        <div className="mobile-header">
+          <button className="burger-btn" onClick={() => setSidebarOpen(true)}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <span style={{ fontWeight:700, fontSize:16, color:'var(--gray-900)' }}>SEcrm</span>
+          <div style={{ width:38 }} />
+        </div>
         <Routes>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/leads" element={<LeadsPage />} />
