@@ -13,9 +13,15 @@ export default function Sidebar() {
         <span>Отдел продаж</span>
       </div>
             <nav className="sidebar-nav">
-        <NavLink to="/" end>
-          <span className="nav-icon">📊</span> Дашборд
-        </NavLink>
+        {user?.role === 'cs_manager' ? (
+          <NavLink to="/my-dashboard" end>
+            <span className="nav-icon">📊</span> Мой дашборд
+          </NavLink>
+        ) : (
+          <NavLink to="/" end>
+            <span className="nav-icon">📊</span> Дашборд
+          </NavLink>
+        )}
         {['super_admin', 'admin', 'rop', 'cs_head', 'dispatcher', 'b2b_manager', 'mfl_manager'].includes(user?.role) && (
           <NavLink to="/leads">
             <span className="nav-icon">📋</span> Лиды
