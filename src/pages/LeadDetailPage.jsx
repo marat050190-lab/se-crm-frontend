@@ -113,6 +113,32 @@ export default function LeadDetailPage() {
         </div>
       </div>
       <div className="page-body">
+        {activeTab === 'email' ? (
+          <div style={{ display:'flex', flexDirection:'column', height:'calc(100vh - 120px)', background:'#fff', borderRadius:12, overflow:'hidden', border:'1px solid #e5e7eb' }}>
+            <div style={{ display:'flex', borderBottom:'2px solid #e5e7eb', background:'#f9fafb' }}>
+              <button onClick={() => setActiveTab('main')} style={{ padding:'12px 16px', border:'none', cursor:'pointer', fontSize:13, background:'#f9fafb', color:'#6b7280' }}>← Назад к лиду</button>
+              {[
+                { key:'email', label:'📧 Переписка' },
+                { key:'tasks', label:'✓ Задачи' },
+                { key:'comment', label:'💬 Комментарий' },
+                { key:'history', label:'📋 История' },
+                { key:'docs', label:'📎 Документы' },
+              ].map(tab => (
+                <button key={tab.key} onClick={() => setActiveTab(tab.key)}
+                  style={{ padding:'12px 16px', border:'none', cursor:'pointer', fontSize:13, fontWeight: activeTab===tab.key ? 600 : 400,
+                    background: activeTab===tab.key ? '#fff' : '#f9fafb',
+                    color: activeTab===tab.key ? '#2563eb' : '#6b7280',
+                    borderBottom: activeTab===tab.key ? '2px solid #2563eb' : '2px solid transparent',
+                    marginBottom:-2 }}>
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+            <div style={{ flex:1, overflow:'hidden' }}>
+              <EmailThread leadId={id} clientEmail={lead.client_phone?.includes('@') ? lead.client_phone : ''} />
+            </div>
+          </div>
+        ) : (
         <div className="lead-detail">
           <div>
             {/* Contact */}
@@ -429,6 +455,7 @@ export default function LeadDetailPage() {
             )}
           </div>
         </div>
+        )}
       </div>
 
       {showEmailForm && (
