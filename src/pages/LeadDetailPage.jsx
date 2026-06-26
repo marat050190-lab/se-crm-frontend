@@ -359,34 +359,7 @@ export default function LeadDetailPage() {
               </div>
             </div>
 
-            <div className="card">
-              <div className="card-header" style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-                <span>Написать письмо клиенту</span>
-                <button className="btn btn-ghost btn-sm" onClick={() => setShowEmailForm(f => !f)}>{showEmailForm ? 'Свернуть' : '✉️ Написать'}</button>
-              </div>
-              {showEmailForm && (
-                <div className="card-body">
-                  <div className="form-group">
-                    <label className="form-label">Кому (email)</label>
-                    <input className="form-control" value={emailForm.to} onChange={e => setEmailForm(f => ({...f, to: e.target.value}))}
-                      placeholder="client@example.com" />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Тема</label>
-                    <input className="form-control" value={emailForm.subject} onChange={e => setEmailForm(f => ({...f, subject: e.target.value}))}
-                      placeholder="Re: Ваш запрос" />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Текст письма</label>
-                    <textarea className="form-control" rows={6} value={emailForm.text} onChange={e => setEmailForm(f => ({...f, text: e.target.value}))}
-                      placeholder="Добрый день! По вашему запросу..." />
-                  </div>
-                  <button className="btn btn-primary" onClick={sendEmailToClient} disabled={sendingEmail}>
-                    {sendingEmail ? 'Отправка...' : '📧 Отправить'}
-                  </button>
-                </div>
-              )}
-            </div>
+
 
             <div className="card">
               <div className="card-header">Документы</div>
@@ -422,6 +395,47 @@ export default function LeadDetailPage() {
           </div>
         </div>
       </div>
+
+      {showEmailForm && (
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.6)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2000 }}>
+          <div style={{ background:'#fff', borderRadius:16, width:'680px', maxWidth:'95vw', maxHeight:'90vh', display:'flex', flexDirection:'column', overflow:'hidden', boxShadow:'0 20px 60px rgba(0,0,0,0.3)' }}>
+            <div style={{ padding:'20px 24px', borderBottom:'1px solid #e5e7eb', display:'flex', justifyContent:'space-between', alignItems:'center', background:'#f9fafb' }}>
+              <div style={{ fontSize:16, fontWeight:700 }}>✉️ Новое письмо</div>
+              <button onClick={() => setShowEmailForm(false)} style={{ background:'none', border:'none', fontSize:20, cursor:'pointer', color:'#6b7280' }}>✕</button>
+            </div>
+            <div style={{ padding:'20px 24px', flex:1, overflowY:'auto', display:'flex', flexDirection:'column', gap:12 }}>
+              <div>
+                <label style={{ fontSize:13, fontWeight:600, color:'#374151', display:'block', marginBottom:4 }}>Кому</label>
+                <input style={{ width:'100%', padding:'10px 12px', border:'1px solid #d1d5db', borderRadius:8, fontSize:14, boxSizing:'border-box' }}
+                  value={emailForm.to} onChange={e => setEmailForm(f => ({...f, to: e.target.value}))}
+                  placeholder="email@example.com" />
+              </div>
+              <div>
+                <label style={{ fontSize:13, fontWeight:600, color:'#374151', display:'block', marginBottom:4 }}>Тема</label>
+                <input style={{ width:'100%', padding:'10px 12px', border:'1px solid #d1d5db', borderRadius:8, fontSize:14, boxSizing:'border-box' }}
+                  value={emailForm.subject} onChange={e => setEmailForm(f => ({...f, subject: e.target.value}))}
+                  placeholder="Re: Ваш запрос" />
+              </div>
+              <div style={{ flex:1 }}>
+                <label style={{ fontSize:13, fontWeight:600, color:'#374151', display:'block', marginBottom:4 }}>Текст письма</label>
+                <textarea style={{ width:'100%', padding:'10px 12px', border:'1px solid #d1d5db', borderRadius:8, fontSize:14, boxSizing:'border-box', resize:'vertical', minHeight:240, fontFamily:'inherit' }}
+                  value={emailForm.text} onChange={e => setEmailForm(f => ({...f, text: e.target.value}))}
+                  placeholder="Добрый день!&#10;&#10;По вашему запросу сообщаем..." />
+              </div>
+            </div>
+            <div style={{ padding:'16px 24px', borderTop:'1px solid #e5e7eb', display:'flex', justifyContent:'space-between', alignItems:'center', background:'#f9fafb' }}>
+              <div style={{ fontSize:12, color:'#9ca3af' }}>Отправка с info@standart-express.ru</div>
+              <div style={{ display:'flex', gap:8 }}>
+                <button onClick={() => setShowEmailForm(false)} style={{ padding:'10px 20px', border:'1px solid #d1d5db', borderRadius:8, background:'#fff', cursor:'pointer', fontSize:14 }}>Отмена</button>
+                <button onClick={sendEmailToClient} disabled={sendingEmail}
+                  style={{ padding:'10px 24px', background:'#2563eb', color:'#fff', border:'none', borderRadius:8, cursor:'pointer', fontSize:14, fontWeight:600 }}>
+                  {sendingEmail ? 'Отправка...' : '📧 Отправить'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showTaskModal && <TaskModal leadId={id} users={users} onClose={() => setShowTaskModal(false)} onCreated={() => { setShowTaskModal(false); load(); }} />}
       {showStatusModal && (
