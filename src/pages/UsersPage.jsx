@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../utils/api.jsx';
+import { Icons } from '../utils/icons.jsx';
 import { ROLES } from '../utils/constants.js';
 import { useAuth } from '../hooks/useAuth.jsx';
 
@@ -184,7 +185,7 @@ function UserModal({ user, onClose, onSaved, currentUser }) {
               <label className="form-label">{isEdit ? 'Новый пароль (если нужно сменить)' : 'Пароль *'}</label>
               <div style={{ position:'relative', display:'flex', alignItems:'center' }}>
                 <input type={showPwd ? 'text' : 'password'} className="form-control" value={form.password} onChange={e => set('password', e.target.value)} placeholder={isEdit ? 'Оставьте пустым чтобы не менять' : ''} style={{ paddingRight:40 }} />
-                <button type="button" onClick={() => setShowPwd(p => !p)} style={{ position:'absolute', right:10, background:'none', border:'none', cursor:'pointer', fontSize:16, color:'#6b7280' }}>{showPwd ? '🙈' : '👁'}</button>
+                <button type="button" onClick={() => setShowPwd(p => !p)} style={{ position:'absolute', right:10, background:'none', border:'none', cursor:'pointer', fontSize:16, color:'#6b7280' }}><span style={{display:'flex'}}>{showPwd ? Icons.eyeOff(16) : Icons.eye(16)}</span></button>
               </div>
             </div>
           </div>

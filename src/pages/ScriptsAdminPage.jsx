@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../utils/api.jsx';
+import { Icons } from '../utils/icons.jsx';
 
 const CATEGORIES = [
   { key: 'relocation', label: 'Переезд' },
@@ -129,7 +130,7 @@ export default function ScriptsAdminPage() {
                       {!script.is_active && <span style={{ marginLeft: '10px', fontSize: '11px', color: 'var(--gray-500)', background: 'var(--gray-700)', padding: '2px 8px', borderRadius: '10px' }}>скрыт</span>}
                     </div>
                     <div style={{ display: 'flex', gap: '8px' }}>
-                      <button onClick={() => toggleActive(script)} style={{ padding: '6px 10px', background: 'var(--gray-700)', color: 'var(--gray-300)', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}>{script.is_active ? '👁' : '🙈'}</button>
+                      <button onClick={() => toggleActive(script)} style={{ padding: '6px 10px', background: 'var(--gray-700)', color: 'var(--gray-300)', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}><span style={{display:'flex'}}>{script.is_active ? Icons.eye(14) : Icons.eyeOff(14)}</span></button>
                       <button onClick={() => openEdit(script)} style={{ padding: '6px 12px', background: 'var(--gray-700)', color: 'var(--gray-200)', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}>✏️ Изменить</button>
                       <button onClick={() => handleDelete(script.id)} style={{ padding: '6px 10px', background: 'rgba(239,68,68,0.15)', color: '#f87171', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}>🗑</button>
                     </div>
