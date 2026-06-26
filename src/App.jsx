@@ -19,6 +19,8 @@ import ScriptsAdminPage from './pages/ScriptsAdminPage';
 import CSDashboardPage from './pages/CSDashboardPage';
 import MFLDashboardPage from './pages/MFLDashboardPage';
 import ContractorsPage from './pages/ContractorsPage';
+import AccountantPage from './pages/AccountantPage';
+import AccountantCashierPage from './pages/AccountantCashierPage';
 
 function ProtectedLayout() {
   const { user, loading } = useAuth();
@@ -45,6 +47,8 @@ function ProtectedLayout() {
           <Route path="/cs-dashboard" element={<CSDashboardPage />} />
           <Route path="/mfl-dashboard" element={<MFLDashboardPage />} />
           <Route path="/contractors" element={<ContractorsPage />} />
+          <Route path="/accountant" element={<AccountantPage />} />
+          <Route path="/accountant-cashier" element={<AccountantCashierPage />} />
         </Routes>
       </main>
       <IncomingCallPopup />

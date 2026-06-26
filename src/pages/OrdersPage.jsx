@@ -24,10 +24,11 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [statusFilter, setStatusFilter] = useState('');
-  const empty = { client_id: '', legal_entity: 'ip', service_type: 'Грузчики', work_date: '', address: '', client_rate: '', executor_rate: '', units: 1, calc_scheme: 'ip_nal', payment_method: 'naimix', comment: '' };
+  const empty = { client_id: '', legal_entity: 'ip', service_type: 'Грузчики', work_date: '', address: '', client_rate: '', executor_rate: '', units: 1, calc_scheme: 'ip_nal', payment_method: 'naimix', comment: '', contractor_id: '' };
   const emptyClient = { name: '', phone: '', client_type: 'individual', company_name: '', inn: '', comment: '' };
   const [form, setForm] = useState(empty);
   const [preview, setPreview] = useState(null);
+  const [contractors, setContractors] = useState([]);
 
   const load = () => {
     setLoading(true);
@@ -36,6 +37,7 @@ export default function OrdersPage() {
   };
   useEffect(load, [statusFilter]);
   useEffect(() => { api.get('/api/clients').then(r => setClients(r.data)).catch(() => {}); }, []);
+  useEffect(() => { api.get('/api/contractors').then(r => setContractors(r.data)).catch(() => {}); }, []);
 
   // живой пересчёт прибыли
   useEffect(() => {
@@ -106,6 +108,10 @@ export default function OrdersPage() {
               <option value="card">На карту</option>
               <option value="cash">Наличные</option>
             </select>
+            <select value={form.contractor_id} onChange={e => setForm({ ...form, contractor_id: e.target.value })} style={input}>
+              <option value="">— исполнитель (опционально) —</option>
+              {contractors.filter(ct => ct.is_active).map(ct => <option key={ct.id} value={ct.id}>{ct.name} ({ct.specialization || ct.type})</option>)}
+            </select>
             <input placeholder="Комментарий" value={form.comment} onChange={e => setForm({ ...form, comment: e.target.value })} style={input} />
           </div>
 
@@ -134,7 +140,7 @@ export default function OrdersPage() {
           <thead>
             <tr>
               <th style={th}>Клиент</th><th style={th}>Услуга</th><th style={th}>Юрлицо</th>
-              <th style={th}>Выручка</th><th style={th}>Прибыль</th><th style={th}>Статус</th><th style={th}>Действие</th>
+              <th style={th}>Выручка</th><th style={th}>Прибыль</th><th style={th}>Исполнитель</th><th style={th}>Статус</th><th style={th}>Действие</th>
             </tr>
           </thead>
           <tbody>
@@ -145,6 +151,7 @@ export default function OrdersPage() {
                 <td style={td}>{o.legal_entity === 'ooo' ? 'ООО СЭ' : 'ИП'}</td>
                 <td style={td}>{Number(o.revenue).toLocaleString('ru')} ₽</td>
                 <td style={{ ...td, color: o.net_profit >= 0 ? '#059669' : '#dc2626', fontWeight: 600 }}>{Number(o.net_profit).toLocaleString('ru')} ₽</td>
+                <td style={td}>{o.contractor_name || '—'}</td>
                 <td style={td}><span style={badge(o.status)}>{STATUS_LABELS[o.status] || o.status}</span></td>
                 <td style={td}>
                   <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
@@ -156,7 +163,7 @@ export default function OrdersPage() {
                 </td>
               </tr>
             ))}
-            {!orders.length && <tr><td colSpan={7} style={{ ...td, textAlign: 'center', color: '#888' }}>Заявок пока нет</td></tr>}
+            {!orders.length && <tr><td colSpan={8} style={{ ...td, textAlign: 'center', color: '#888' }}>Заявок пока нет</td></tr>}
           </tbody>
         </table>
       )}
