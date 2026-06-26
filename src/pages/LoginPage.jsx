@@ -31,9 +31,9 @@ export default function LoginPage() {
   const inpStyle = {
     width:'100%', boxSizing:'border-box',
     padding:'12px 16px',
-    background:'rgba(255,255,255,0.08)',
-    border:'1.5px solid rgba(255,255,255,0.13)',
-    borderRadius:10, color:'#fff', fontSize:14,
+    background:'#f8fafc',
+    border:'1.5px solid #e2e8f0',
+    borderRadius:10, color:'#1a2535', fontSize:14,
     outline:'none', fontFamily:'Inter, sans-serif',
     transition:'border-color 0.15s',
   };
@@ -47,25 +47,25 @@ export default function LoginPage() {
       backgroundRepeat:'no-repeat',
       position:'relative',
     }}>
-      {/* Затемнение поверх фона */}
-      <div style={{ position:'absolute', inset:0, background:'rgba(10,13,20,0.55)' }} />
+      {/* Лёгкое осветление */}
+      <div style={{ position:'absolute', inset:0, background:'rgba(255,255,255,0.25)' }} />
 
       {/* Карточка входа по центру */}
       <div style={{ position:'relative', zIndex:1, width:420, padding:'0 16px' }}>
 
         {/* Карточка */}
         <div style={{
-          background:'rgba(255,255,255,0.07)',
+          background:'rgba(255,255,255,0.92)',
           backdropFilter:'blur(24px)',
-          border:'1px solid rgba(255,255,255,0.12)',
+          border:'1px solid rgba(0,0,0,0.08)',
           borderRadius:20,
           padding:'36px 36px 32px',
           boxShadow:'0 24px 64px rgba(0,0,0,0.5)',
         }}>
-          <h2 style={{ fontSize:22, fontWeight:800, color:'#fff', margin:'0 0 6px', letterSpacing:'-0.4px', fontFamily:'Inter, sans-serif', textAlign:'center' }}>
+          <h2 style={{ fontSize:22, fontWeight:800, color:'#1a2535', margin:'0 0 6px', letterSpacing:'-0.4px', fontFamily:'Inter, sans-serif', textAlign:'center' }}>
             Вход в систему
           </h2>
-          <p style={{ fontSize:13, color:'rgba(255,255,255,0.38)', margin:'0 0 28px', textAlign:'center' }}>
+          <p style={{ fontSize:13, color:'#6b7a8d', margin:'0 0 28px', textAlign:'center' }}>
             CRM Отдела продаж
           </p>
 
@@ -77,7 +77,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} style={{ display:'flex', flexDirection:'column', gap:14 }}>
             <div>
-              <label style={{ display:'block', fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.45)', marginBottom:7, textTransform:'uppercase', letterSpacing:'0.07em' }}>Email</label>
+              <label style={{ display:'block', fontSize:11, fontWeight:700, color:'#6b7a8d', marginBottom:7, textTransform:'uppercase', letterSpacing:'0.07em' }}>Email</label>
               <input
                 type="email" value={email}
                 onChange={e => setEmail(e.target.value)}
@@ -90,7 +90,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label style={{ display:'block', fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.45)', marginBottom:7, textTransform:'uppercase', letterSpacing:'0.07em' }}>Пароль</label>
+              <label style={{ display:'block', fontSize:11, fontWeight:700, color:'#6b7a8d', marginBottom:7, textTransform:'uppercase', letterSpacing:'0.07em' }}>Пароль</label>
               <div style={{ position:'relative' }}>
                 <input
                   type={showPwd ? 'text' : 'password'} value={password}
@@ -101,7 +101,7 @@ export default function LoginPage() {
                   onBlur={e => e.target.style.borderColor='rgba(255,255,255,0.13)'}
                 />
                 <button type="button" onClick={() => setShowPwd(p => !p)}
-                  style={{ position:'absolute', right:12, top:'50%', transform:'translateY(-50%)', background:'rgba(255,255,255,0.12)', border:'none', cursor:'pointer', color:'rgba(255,255,255,0.85)', display:'flex', padding:6, borderRadius:6 }}
+                  style={{ position:'absolute', right:12, top:'50%', transform:'translateY(-50%)', background:'rgba(0,0,0,0.06)', border:'none', cursor:'pointer', color:'#6b7a8d', display:'flex', padding:6, borderRadius:6 }}
                   onMouseEnter={e => e.currentTarget.style.color='rgba(255,255,255,0.75)'}
                   onMouseLeave={e => e.currentTarget.style.color='rgba(255,255,255,0.35)'}>
                   {showPwd ? Icons.eyeOff(18) : Icons.eye(18)}
@@ -123,7 +123,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div style={{ marginTop:24, textAlign:'center', fontSize:11, color:'rgba(255,255,255,0.18)' }}>
+          <div style={{ marginTop:24, textAlign:'center', fontSize:11, color:'rgba(0,0,0,0.25)' }}>
             Стандарт Экспресс © 2026
           </div>
         </div>
