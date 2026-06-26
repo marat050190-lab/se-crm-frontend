@@ -48,11 +48,11 @@ export default function Sidebar({ open, onClose }) {
           </div>
         </div>
         <nav className="sidebar-nav">
-          {isCs && <NavItem to="/cs-dashboard-personal" icon={Icons.dashboard()} label="Мой дашборд" onClick={close} />}
+          {isCs && <NavItem to="/my-dashboard" icon={Icons.dashboard()} label="Мой дашборд" onClick={close} />}
           {(isAdmin || isRop) && <NavItem to="/" icon={Icons.dashboard()} label="Дашборд" onClick={close} />}
           {(isAdmin || isRop || isDispatcher || isB2b || isMfl) && <NavItem to="/leads" icon={Icons.leads()} label="Лиды" onClick={close} />}
           {isDispatcher && <NavItem to="/queue" icon={Icons.funnel()} label="Очередь" onClick={close} />}
-          {(isDispatcher || isB2b) && <NavItem to="/my-kpi" icon={Icons.kpi()} label="Мои KPI" onClick={close} />}
+          {(isDispatcher || isB2b) && <NavItem to="/my-stats" icon={Icons.kpi()} label="Мои KPI" onClick={close} />}
           {(isAdmin || isRop || isB2b) && <NavItem to="/pipeline" icon={Icons.funnel()} label="Воронка" onClick={close} />}
           {!isAccCashier && !isAcc && <NavItem to="/tasks" icon={Icons.tasks()} label="Мои задачи" onClick={close} />}
           {!isAccCashier && !isAcc && <NavItem to="/clients" icon={Icons.clients()} label="Клиенты" onClick={close} />}
