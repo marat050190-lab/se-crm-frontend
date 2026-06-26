@@ -42,7 +42,7 @@ export default function LoginPage() {
     <div style={{
       minHeight:'100vh', display:'flex',
       alignItems:'center', justifyContent:'center',
-      backgroundImage:'url(/bg-login.png)',
+      backgroundImage:'url(/bg-login-v2.png)',
       backgroundSize:'cover', backgroundPosition:'center',
       backgroundRepeat:'no-repeat',
       position:'relative',
