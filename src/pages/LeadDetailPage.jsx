@@ -21,6 +21,7 @@ export default function LeadDetailPage() {
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({});
   const [comment, setComment] = useState('');
+  const [activeTab, setActiveTab] = useState('email');
   const [emailForm, setEmailForm] = useState({ to: '', subject: '', text: '' });
   const [sendingEmail, setSendingEmail] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(false);
@@ -310,18 +311,46 @@ export default function LeadDetailPage() {
             </div>
           </div>
 
-          {/* RIGHT */}
-          <div>
-            <div className="card" style={{ marginBottom: 16 }}>
-              <div className="card-header flex justify-between items-center">
-                Задачи
-                <button className="btn btn-sm btn-ghost" onClick={() => setShowTaskModal(true)}>+ Добавить</button>
+          {/* RIGHT — вкладки */}
+          <div style={{ display:'flex', flexDirection:'column', minHeight:600 }}>
+            {/* Табы */}
+            <div style={{ display:'flex', borderBottom:'2px solid #e5e7eb', marginBottom:0, background:'#fff', borderRadius:'12px 12px 0 0', overflow:'hidden' }}>
+              {[
+                { key:'email', label:'📧 Переписка' },
+                { key:'tasks', label:'✓ Задачи' },
+                { key:'comment', label:'💬 Комментарий' },
+                { key:'history', label:'📋 История' },
+                { key:'docs', label:'📎 Документы' },
+              ].map(tab => (
+                <button key={tab.key} onClick={() => setActiveTab(tab.key)}
+                  style={{ padding:'12px 16px', border:'none', cursor:'pointer', fontSize:13, fontWeight: activeTab===tab.key ? 600 : 400,
+                    background: activeTab===tab.key ? '#fff' : '#f9fafb',
+                    color: activeTab===tab.key ? '#2563eb' : '#6b7280',
+                    borderBottom: activeTab===tab.key ? '2px solid #2563eb' : '2px solid transparent',
+                    marginBottom:-2, whiteSpace:'nowrap' }}>
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Переписка */}
+            {activeTab === 'email' && (
+              <div className="card" style={{ flex:1, overflow:'hidden', borderRadius:'0 0 12px 12px', minHeight:500 }}>
+                <EmailThread leadId={id} clientEmail={lead.client_phone?.includes('@') ? lead.client_phone : ''} />
               </div>
-              <div className="card-body">
-                {tasks.filter(t => t.status === 'pending').length === 0 ? (
-                  <div style={{ textAlign: 'center', padding: '20px 0', color: 'var(--gray-400)', fontSize: 13 }}>Задач нет</div>
-                ) : (
-                  tasks.filter(t => t.status === 'pending').map(task => {
+            )}
+
+            {/* Задачи */}
+            {activeTab === 'tasks' && (
+              <div className="card" style={{ borderRadius:'0 0 12px 12px' }}>
+                <div className="card-header flex justify-between items-center">
+                  Задачи
+                  <button className="btn btn-sm btn-ghost" onClick={() => setShowTaskModal(true)}>+ Добавить</button>
+                </div>
+                <div className="card-body">
+                  {tasks.filter(t => t.status === 'pending').length === 0 ? (
+                    <div style={{ textAlign:'center', padding:'20px 0', color:'var(--gray-400)', fontSize:13 }}>Задач нет</div>
+                  ) : tasks.filter(t => t.status === 'pending').map(task => {
                     const due = task.due_date ? new Date(task.due_date) : null;
                     const isOverdue = due && due < new Date();
                     return (
@@ -334,69 +363,70 @@ export default function LeadDetailPage() {
                         </div>
                       </div>
                     );
-                  })
-                )}
-                {tasks.filter(t => t.status === 'done').length > 0 && (
-                  <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--gray-100)' }}>
-                    <div style={{ fontSize: 11, color: 'var(--gray-400)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Выполнено</div>
-                    {tasks.filter(t => t.status === 'done').map(task => (
-                      <div key={task.id} style={{ fontSize: 12, color: 'var(--gray-400)', padding: '4px 0', textDecoration: 'line-through' }}>{task.title}</div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="card" style={{ marginBottom: 16 }}>
-              <div className="card-header">Добавить комментарий</div>
-              <div className="card-body">
-                <textarea
-                  className="form-control" rows={3} value={comment}
-                  onChange={e => setComment(e.target.value)}
-                  placeholder="Что обсудили с клиентом..."
-                  onKeyDown={e => e.key === 'Enter' && e.metaKey && sendComment()}
-                />
-                <button className="btn btn-primary btn-sm mt-2" onClick={sendComment} disabled={!comment.trim()}>Сохранить</button>
-              </div>
-            </div>
-
-
-
-            <div className="card" style={{ overflow:'hidden' }}>
-              <EmailThread leadId={id} clientEmail={lead.client_phone?.includes('@') ? lead.client_phone : ''} />
-            </div>
-
-            <div className="card">
-              <div className="card-header">Документы</div>
-              <div className="card-body">
-                <FileAttachments entityType="lead" entityId={id} />
-              </div>
-            </div>
-
-            <div className="card">
-              <div className="card-header">История</div>
-              <div className="card-body">
-                <div className="timeline">
-                  {history.map(h => (
-                    <div className="timeline-item" key={h.id}>
-                      <div className="timeline-dot">{HISTORY_ICONS[h.action] || '●'}</div>
-                      <div className="timeline-content">
-                        <div className="timeline-text">
-                          {h.action === 'status_change'
-                            ? <>Статус: <strong>{STATUSES[h.old_value]?.label || h.old_value}</strong> → <strong>{STATUSES[h.new_value]?.label || h.new_value}</strong></>
-                            : (h.comment || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
-                          }
-                        </div>
-                        <div className="timeline-meta">
-                          {h.user_name && <>{h.user_name} · </>}
-                          {fmtDateTime(h.created_at)}
-                        </div>
-                      </div>
+                  })}
+                  {tasks.filter(t => t.status === 'done').length > 0 && (
+                    <div style={{ marginTop:12, paddingTop:12, borderTop:'1px solid var(--gray-100)' }}>
+                      <div style={{ fontSize:11, color:'var(--gray-400)', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:6 }}>Выполнено</div>
+                      {tasks.filter(t => t.status === 'done').map(task => (
+                        <div key={task.id} style={{ fontSize:12, color:'var(--gray-400)', padding:'4px 0', textDecoration:'line-through' }}>{task.title}</div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* Комментарий */}
+            {activeTab === 'comment' && (
+              <div className="card" style={{ borderRadius:'0 0 12px 12px' }}>
+                <div className="card-header">Добавить комментарий</div>
+                <div className="card-body">
+                  <textarea className="form-control" rows={6} value={comment}
+                    onChange={e => setComment(e.target.value)}
+                    placeholder="Что обсудили с клиентом..."
+                    onKeyDown={e => e.key === 'Enter' && e.metaKey && sendComment()} />
+                  <button className="btn btn-primary btn-sm mt-2" onClick={sendComment} disabled={!comment.trim()}>Сохранить</button>
+                </div>
+              </div>
+            )}
+
+            {/* История */}
+            {activeTab === 'history' && (
+              <div className="card" style={{ borderRadius:'0 0 12px 12px' }}>
+                <div className="card-header">История</div>
+                <div className="card-body">
+                  <div className="timeline">
+                    {history.map(h => (
+                      <div className="timeline-item" key={h.id}>
+                        <div className="timeline-dot">{HISTORY_ICONS[h.action] || '●'}</div>
+                        <div className="timeline-content">
+                          <div className="timeline-text">
+                            {h.action === 'status_change'
+                              ? <>Статус: <strong>{STATUSES[h.old_value]?.label || h.old_value}</strong> → <strong>{STATUSES[h.new_value]?.label || h.new_value}</strong></>
+                              : (h.comment || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
+                            }
+                          </div>
+                          <div className="timeline-meta">
+                            {h.user_name && <>{h.user_name} · </>}
+                            {fmtDateTime(h.created_at)}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Документы */}
+            {activeTab === 'docs' && (
+              <div className="card" style={{ borderRadius:'0 0 12px 12px' }}>
+                <div className="card-header">Документы</div>
+                <div className="card-body">
+                  <FileAttachments entityType="lead" entityId={id} />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
