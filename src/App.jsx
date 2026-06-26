@@ -22,6 +22,7 @@ import ContractorsPage from './pages/ContractorsPage';
 import AccountantPage from './pages/AccountantPage';
 import AccountantCashierPage from './pages/AccountantCashierPage';
 import CSDashboardPersonal from './pages/CSDashboardPersonal';
+import ClientDetailPage from './pages/ClientDetailPage';
 
 function ProtectedLayout() {
   const { user, loading } = useAuth();
@@ -42,6 +43,7 @@ function ProtectedLayout() {
           <Route path="/tasks" element={<TasksPage />} />
           <Route path="/users" element={<UsersPage />} />
           <Route path="/clients" element={<ClientsPage />} />
+          <Route path="/clients/:id" element={<ClientDetailPage />} />
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/scripts" element={<ScriptsPage />} />
           <Route path="/scripts-admin" element={<ScriptsAdminPage />} />
