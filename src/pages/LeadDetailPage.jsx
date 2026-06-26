@@ -87,7 +87,7 @@ export default function LeadDetailPage() {
     setSendingEmail(false);
   };
 
-  const HISTORY_ICONS = { created: '🆕', status_change: '🔄', comment: '💬', field_update: '✏️', task_created: '📌', task_done: '✅' };
+  const HISTORY_ICONS = { created: '🆕', status_change: '🔄', comment: '💬', field_update: '✏️', task_created: '📌', task_done: '✅', email: '📧', email_sent: '📤', note: '📧' };
 
   return (
     <>
@@ -379,7 +379,7 @@ export default function LeadDetailPage() {
                         <div className="timeline-text">
                           {h.action === 'status_change'
                             ? <>Статус: <strong>{STATUSES[h.old_value]?.label || h.old_value}</strong> → <strong>{STATUSES[h.new_value]?.label || h.new_value}</strong></>
-                            : h.comment
+                            : (h.comment || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
                           }
                         </div>
                         <div className="timeline-meta">
