@@ -55,6 +55,7 @@ body {
   flex-direction: column;
   flex-shrink: 0;
   overflow: hidden;
+  height: 100vh;
 }
 
 .sidebar-logo {
@@ -79,6 +80,8 @@ body {
 .sidebar-nav {
   flex: 1;
   padding: 10px 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .sidebar-nav a {
