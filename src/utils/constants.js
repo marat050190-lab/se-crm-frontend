@@ -34,8 +34,8 @@ export const STATUSES = {
 };
 
 export const CLIENT_TYPES = [
-  { value: 'individual', label: '👤 Физлицо' },
-  { value: 'legal',      label: '🏢 Юрлицо' },
+  { value: 'individual', label: 'Физлицо' },
+  { value: 'legal',      label: 'Юрлицо' },
 ];
 
 export const SERVICE_TYPES = [
@@ -52,8 +52,8 @@ export const SERVICE_TYPES = [
 ];
 
 export const TASK_TYPES = [
-  { value: 'call',    label: '📞 Перезвонить' },
-  { value: 'send_kp', label: '📄 Отправить КП' },
+  { value: 'call',    label: 'Перезвонить' },
+  { value: 'send_kp', label: 'Отправить КП' },
   { value: 'meeting', label: '🤝 Встреча' },
   { value: 'other',   label: '✓ Другое' },
 ];

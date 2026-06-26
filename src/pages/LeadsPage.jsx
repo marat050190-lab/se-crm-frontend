@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import api from '../utils/api.jsx';
 import { STATUSES, SERVICE_TYPES, SOURCES, CLIENT_TYPES } from '../utils/constants.js';
+import { Icons } from '../utils/icons.jsx';
 
 const BACKEND_URL = import.meta.env.VITE_API_URL || 'https://se-crm-backend-production.up.railway.app';
 
@@ -80,13 +81,18 @@ export default function LeadsPage() {
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
           />
-          <select className="form-control" value={status} onChange={e => { setStatus(e.target.value); setPage(1); }}>
-            <option value="all">Все статусы</option>
-            {Object.entries(STATUSES).map(([k, v]) => (
-              <option key={k} value={k}>{v.label}</option>
+          <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
+            {[['all','Все'], ['new','Новое'], ['in_progress','В работе'], ['transferred_b2b','B2B'], ['transferred_mfl','МФЛ'], ['taken','Взят'], ['rejected','Отказ'], ['no_answer','Недозвон']].map(([k,l]) => (
+              <button key={k} onClick={() => { setStatus(k); setPage(1); }}
+                style={{ padding:'6px 12px', borderRadius:20, fontSize:12, fontWeight:600, cursor:'pointer', border:'none',
+                  background: status===k ? 'var(--primary)' : 'var(--gray-100)',
+                  color: status===k ? '#fff' : 'var(--gray-600)',
+                  transition:'all 0.15s' }}>
+                {l}
+              </button>
             ))}
-          </select>
-          <button className="btn btn-secondary btn-sm" onClick={loadLeads}>↻ Обновить</button>
+          </div>
+          <button className="btn btn-secondary btn-sm" onClick={loadLeads} style={{ display:'flex', alignItems:'center', gap:6 }}>{Icons.refresh(14)} Обновить</button>
         </div>
 
         <div className="card">
@@ -95,7 +101,7 @@ export default function LeadsPage() {
               <div style={{ padding: 40, textAlign: 'center', color: 'var(--gray-400)' }}>Загрузка...</div>
             ) : leads.length === 0 ? (
               <div className="empty-state">
-                <div className="empty-icon">📭</div>
+                <div style={{ fontSize:40, marginBottom:12, opacity:0.3 }}>○</div>
                 <p>Лиды не найдены</p>
               </div>
             ) : (
@@ -136,7 +142,7 @@ export default function LeadsPage() {
                         <td><span className="phone">{lead.client_phone}</span></td>
                         <td>
                           <span className="text-muted">
-                            {lead.client_type === 'legal' ? '🏢' : '👤'}
+                            {lead.client_type === 'legal' ? 'Юрлицо' : 'Физлицо'}
                           </span>
                         </td>
                         <td>{svc?.label || <span className="text-muted">—</span>}</td>
