@@ -101,7 +101,7 @@ export default function LoginPage() {
                   onBlur={e => e.target.style.borderColor='rgba(255,255,255,0.13)'}
                 />
                 <button type="button" onClick={() => setShowPwd(p => !p)}
-                  style={{ position:'absolute', right:12, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'rgba(255,255,255,0.35)', display:'flex', padding:4 }}
+                  style={{ position:'absolute', right:12, top:'50%', transform:'translateY(-50%)', background:'rgba(255,255,255,0.12)', border:'none', cursor:'pointer', color:'rgba(255,255,255,0.85)', display:'flex', padding:6, borderRadius:6 }}
                   onMouseEnter={e => e.currentTarget.style.color='rgba(255,255,255,0.75)'}
                   onMouseLeave={e => e.currentTarget.style.color='rgba(255,255,255,0.35)'}>
                   {showPwd ? Icons.eyeOff(18) : Icons.eye(18)}
