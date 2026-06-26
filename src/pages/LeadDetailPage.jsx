@@ -1,6 +1,7 @@
 import B2CCalculator from '../components/B2CCalculator';
 import AddressInput from '../components/AddressInput';
 import FileAttachments from '../components/FileAttachments';
+import EmailThread from '../components/EmailThread';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../utils/api.jsx';
@@ -360,6 +361,10 @@ export default function LeadDetailPage() {
             </div>
 
 
+
+            <div className="card" style={{ overflow:'hidden' }}>
+              <EmailThread leadId={id} clientEmail={lead.client_phone?.includes('@') ? lead.client_phone : ''} />
+            </div>
 
             <div className="card">
               <div className="card-header">Документы</div>
