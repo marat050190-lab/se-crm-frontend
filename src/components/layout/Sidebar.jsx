@@ -53,7 +53,7 @@ export default function Sidebar({ open, onClose }) {
           {(isAdmin || isRop || isDispatcher || isB2b || isMfl) && <NavItem to="/leads" icon={Icons.leads()} label="Лиды" onClick={close} />}
           {isDispatcher && <NavItem to="/queue" icon={Icons.funnel()} label="Очередь" onClick={close} />}
           {(isDispatcher || isB2b) && <NavItem to="/my-kpi" icon={Icons.kpi()} label="Мои KPI" onClick={close} />}
-          {(isAdmin || isRop || isB2b) && <NavItem to="/funnel" icon={Icons.funnel()} label="Воронка" onClick={close} />}
+          {(isAdmin || isRop || isB2b) && <NavItem to="/pipeline" icon={Icons.funnel()} label="Воронка" onClick={close} />}
           {!isAccCashier && !isAcc && <NavItem to="/tasks" icon={Icons.tasks()} label="Мои задачи" onClick={close} />}
           {!isAccCashier && !isAcc && <NavItem to="/clients" icon={Icons.clients()} label="Клиенты" onClick={close} />}
           {(isAdmin || isRop || isCsHead || isCs || isAcc || isAccCashier) && <NavItem to="/orders" icon={Icons.orders()} label="Заявки КС" onClick={close} />}
