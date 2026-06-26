@@ -116,7 +116,7 @@ export default function LeadDetailPage() {
         {activeTab === 'email' ? (
           <div style={{ display:'flex', flexDirection:'column', height:'calc(100vh - 120px)', background:'#fff', borderRadius:12, overflow:'hidden', border:'1px solid #e5e7eb' }}>
             <div style={{ display:'flex', borderBottom:'2px solid #e5e7eb', background:'#f9fafb' }}>
-              <button onClick={() => setActiveTab('main')} style={{ padding:'12px 16px', border:'none', cursor:'pointer', fontSize:13, background:'#f9fafb', color:'#6b7280' }}>← Назад к лиду</button>
+              <button onClick={() => setActiveTab('tasks')} style={{ padding:'12px 16px', border:'none', cursor:'pointer', fontSize:13, background:'#f9fafb', color:'#6b7280' }}>← Назад к лиду</button>
               {[
                 { key:'email', label:'📧 Переписка' },
                 { key:'tasks', label:'✓ Задачи' },
