@@ -35,7 +35,7 @@ export default function Sidebar() {
         {isCs && <NavItem to="/cs-dashboard-personal" icon={Icons.dashboard()} label="Мой дашборд" />}
 
         {/* Дашборд */}
-        {(isAdmin || isRop) && <NavItem to="/dashboard" icon={Icons.dashboard()} label="Дашборд" />}
+        {(isAdmin || isRop) && <NavItem to="/" icon={Icons.dashboard()} label="Дашборд" />}
 
         {/* Лиды */}
         {(isAdmin || isRop || isDispatcher || isB2b || isMfl) && <NavItem to="/leads" icon={Icons.leads()} label="Лиды" />}
