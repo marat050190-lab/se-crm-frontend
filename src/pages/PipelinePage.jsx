@@ -14,7 +14,7 @@ export default function PipelinePage() {
   const [leads, setLeads] = useState([]);
 
   useEffect(() => {
-    api.get('/api/leads?limit=200&status=all').then(r => setLeads(r.data.leads));
+    api.get('/api/leads?limit=200&status=all').then(r => setLeads(r.data.leads || r.data || [])).catch(() => setLeads([]));
   }, []);
 
   const byStatus = PIPELINE_STAGES.reduce((acc, s) => {
@@ -54,7 +54,7 @@ export default function PipelinePage() {
                     <div className="pipeline-card-name">{lead.client_name || lead.client_company || '—'}</div>
                     <div className="pipeline-card-phone">{lead.client_phone}</div>
                     <div style={{ fontSize: 11, color: 'var(--gray-400)', marginTop: 2 }}>
-                      {lead.client_type === 'legal' ? '🏢' : '👤'}
+                      {lead.client_type === 'legal' ? 'Юрлицо' : 'Физлицо'}
                     </div>
                     {lead.price_estimate && (
                       <div className="pipeline-card-price">{Number(lead.price_estimate).toLocaleString('ru-RU')} ₽</div>
