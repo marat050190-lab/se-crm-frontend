@@ -60,8 +60,8 @@ export default function Sidebar({ open, onClose }) {
           {(isAdmin || isRop || isCsHead) && <NavItem to="/users" icon={Icons.users()} label="Сотрудники" onClick={close} />}
           {(isAdmin || isDispatcher) && <NavItem to="/pricing" icon={Icons.price()} label="Прайс" onClick={close} />}
           {(isAdmin || isDispatcher || isB2b) && <NavItem to="/scripts" icon={Icons.scripts()} label="Скрипты" onClick={close} />}
-          {(isAdmin || isCsHead || isCs) && <NavItem to="/cs-dashboard" icon={Icons.chart()} label="Дашборд КС" onClick={close} />}
-          {(isAdmin || isMfl) && <NavItem to="/mfl-dashboard" icon={Icons.chart()} label="Дашборд МФЛ" onClick={close} />}
+          {(isCsHead || isCs) && <NavItem to="/cs-dashboard" icon={Icons.chart()} label="Дашборд КС" onClick={close} />}
+          {isMfl && <NavItem to="/mfl-dashboard" icon={Icons.chart()} label="Дашборд МФЛ" onClick={close} />}
           {(isCsHead || isCs) && <NavItem to="/scripts" icon={Icons.scripts()} label="Скрипты" onClick={close} />}
           {(isAdmin || isCsHead || isCs) && <NavItem to="/contractors" icon={Icons.workers()} label="Исполнители" onClick={close} />}
           {(isAdmin || isAcc) && <NavItem to="/accountant" icon={Icons.invoice()} label="Счета" onClick={close} />}
