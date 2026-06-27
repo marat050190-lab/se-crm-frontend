@@ -50,7 +50,7 @@ function LineChart({ data }) {
   );
 }
 
-export default function DeptDashboardPage({ endpoint, title, tableTitle }) {
+export default function DeptDashboardPage({ endpoint, title, tableTitle, embedded }) {
   const today = new Date();
   const first = new Date(today.getFullYear(), today.getMonth(), 1);
   const iso = (d) => d.toISOString().slice(0, 10);
@@ -92,9 +92,9 @@ export default function DeptDashboardPage({ endpoint, title, tableTitle }) {
 
   return (
     <>
-      <div className="page-header">
+      {!embedded && <div className="page-header">
         <h2>{title}</h2>
-      </div>
+      </div>}
       <div className="page-body">
 
         <div className="card" style={{ padding: 16, marginBottom: 20 }}>
