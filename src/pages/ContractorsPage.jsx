@@ -22,7 +22,7 @@ export default function ContractorsPage() {
   useEffect(() => { load(); }, []);
 
   async function load() {
-    try { const res = await api.get('/contractors'); setContractors(res.data); } catch(e) { console.error(e); }
+    try { const res = await api.get('/api/contractors'); setContractors(res.data); } catch(e) { console.error(e); }
   }
 
   function openAdd() { setForm(empty); setModal('add'); }
@@ -35,8 +35,8 @@ export default function ContractorsPage() {
     if (!form.name) return alert('Введите ФИО');
     setLoading(true);
     try {
-      if (modal === 'add') await api.post('/contractors', form);
-      else await api.put('/contractors/' + form.id, form);
+      if (modal === 'add') await api.post('/api/contractors', form);
+      else await api.put('/api/contractors/' + form.id, form);
       await load();
       setModal(null);
     } catch(e) { alert('Ошибка: ' + e.message); }
