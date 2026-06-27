@@ -67,6 +67,14 @@ export default function OrdersPage() {
     setShowForm(false); setForm(empty); setPreview(null); load();
   };
 
+  const publishToForWork = async (id) => {
+    try {
+      await api.put(`/api/orders/${id}/status`, { status: 'new' });
+      load();
+      alert('Заявка опубликована в ForWork!');
+    } catch(e) { alert('Ошибка'); }
+  };
+
   const changeStatus = async (id, status) => {
     await api.put(`/api/orders/${id}/status`, { status });
     load();
@@ -152,7 +160,18 @@ export default function OrdersPage() {
                 <td style={td}>{o.legal_entity === 'ooo' ? 'ООО СЭ' : 'ИП'}</td>
                 <td style={td}>{Number(o.revenue).toLocaleString('ru')} ₽</td>
                 <td style={{ ...td, color: o.net_profit >= 0 ? '#059669' : '#dc2626', fontWeight: 600 }}>{Number(o.net_profit).toLocaleString('ru')} ₽</td>
-                <td style={td}>{o.contractor_name || '—'}</td>
+                <td style={td}>
+                  {o.contractor_name ? (
+                    <div>
+                      <div style={{ fontWeight:600, fontSize:13 }}>{o.contractor_name}</div>
+                      {o.contractor_phone && <div style={{ fontSize:12, color:'#6b7280' }}>{o.contractor_phone}</div>}
+                      {o.contractor_city && <div style={{ fontSize:12, color:'#6b7280' }}>{o.contractor_city}</div>}
+                      {o.is_self_employed && <span style={{ fontSize:11, background:'#E6F9EE', color:'#00B14F', padding:'2px 8px', borderRadius:10, fontWeight:600 }}>Самозанятый</span>}
+                    </div>
+                  ) : (
+                    <span style={{ color:'#9ca3af', fontSize:13 }}>Не назначен</span>
+                  )}
+                </td>
                 <td style={td}><span style={badge(o.status)}>{STATUS_LABELS[o.status] || o.status}</span></td>
                 <td style={td}>
                   <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
@@ -160,6 +179,12 @@ export default function OrdersPage() {
                       {Object.keys(STATUS_LABELS).map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
                     </select>
                     <button type="button" onClick={() => setFilesOrder(o)} title="Документы" style={{ ...input, padding: '6px 10px', cursor: 'pointer', background: '#f0f9ff', borderColor: '#2563eb' }}>📎</button>
+                    {!o.contractor_id && (
+                      <button type="button" onClick={() => publishToForWork(o.id)}
+                        style={{ padding:'6px 10px', background:'#00B14F', color:'#fff', border:'none', borderRadius:6, cursor:'pointer', fontSize:12, fontWeight:600, whiteSpace:'nowrap' }}>
+                        ForWork
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
