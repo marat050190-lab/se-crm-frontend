@@ -60,7 +60,7 @@ export default function TasksPage() {
       <div className="page-body" style={{ maxWidth: 720 }}>
         {tasks.length === 0 ? (
           <div className="empty-state card card-body">
-            <div className="empty-icon">✅</div>
+            <div style={{ fontSize:40, marginBottom:12, color:"var(--primary)", opacity:0.5 }}><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
             <p>Задач нет</p>
             <p className="text-muted">Отличная работа!</p>
           </div>

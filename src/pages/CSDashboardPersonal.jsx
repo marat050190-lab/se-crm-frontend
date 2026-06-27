@@ -67,7 +67,7 @@ export default function CSDashboardPersonal() {
         <div style={{ background:'#fff', borderRadius:12, padding:20, border:'1px solid #e5e7eb' }}>
           <div style={{ fontSize:14, fontWeight:600, marginBottom:16 }}>Мои задачи</div>
           {!stats?.tasks?.length ? (
-            <div style={{ textAlign:'center', padding:20, color:'#9ca3af' }}>✅ Задач нет</div>
+            <div style={{ textAlign:'center', padding:20, color:'#9ca3af' }}>Задач нет</div>
           ) : stats.tasks.slice(0, 5).map(t => (
             <div key={t.id} style={{ padding:'8px 0', borderBottom:'1px solid #f3f4f6' }}>
               <div style={{ fontSize:13, fontWeight:500 }}>{t.title || t.type}</div>

@@ -89,7 +89,7 @@ export default function LeadDetailPage() {
     setSendingEmail(false);
   };
 
-  const HISTORY_ICONS = { created: '🆕', status_change: '🔄', comment: '💬', field_update: '✏️', task_created: '📌', task_done: '✅', email: '📧', email_sent: '📤', note: '📧' };
+  const HISTORY_ICONS = { created: '+', status_change: '↔', comment: '💬', field_update: '✏️', task_created: '!', task_done: '✓', email: '@', email_sent: '→', note: '@' };
 
   return (
     <>

@@ -90,7 +90,7 @@ export default function DispatcherQueuePage() {
         {loading && leads.length === 0 ? (
           <div style={{ padding: 40, textAlign: 'center', color: 'var(--gray-400)' }}>Загрузка...</div>
         ) : leads.length === 0 ? (
-          <div className="empty-state"><div className="empty-icon">✅</div><p>Очередь пуста</p></div>
+          <div className="empty-state"><div style={{ marginBottom:12, color:"var(--primary)", opacity:0.5 }}><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><p>Очередь пуста</p></div>
         ) : (
           <>
             {newLeads.length > 0 && (
