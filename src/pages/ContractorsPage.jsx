@@ -6,7 +6,7 @@ const TYPES = { self_employed: 'Самозанятый', individual: 'Физли
 const SPECS = ['грузчик', 'бригадир'];
 const SKILLS_LIST = ['такелажник', 'сборщик мебели', 'упаковщик', 'есть своя машина'];
 
-const empty = { name:'', phone:'', type:'self_employed', specialization:'грузчик', skills:[], inn:'', card_number:'', sbp_phone:'', ip_name:'', bank_account:'', bank_bik:'', is_active:true };
+const empty = { name:'', phone:'', type:'self_employed', specialization:'грузчик', skills:[], inn:'', card_number:'', sbp_phone:'', bank_name:'', ip_name:'', bank_account:'', bank_bik:'', is_active:true };
 
 export default function ContractorsPage() {
   const { user } = useAuth();
@@ -169,6 +169,10 @@ export default function ContractorsPage() {
               <div>
                 <label style={lbl}>Телефон СБП</label>
                 <input value={form.sbp_phone||''} onChange={e => setForm(f => ({...f, sbp_phone: e.target.value}))} style={inp} placeholder="+7..." />
+              </div>
+              <div>
+                <label style={lbl}>Банк</label>
+                <input value={form.bank_name||''} onChange={e => setForm(f => ({...f, bank_name: e.target.value}))} style={inp} placeholder="Сбербанк, Т-Банк..." />
               </div>
               {form.type === 'ip' && (
                 <div style={{ gridColumn:'1/-1', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'14px' }}>
