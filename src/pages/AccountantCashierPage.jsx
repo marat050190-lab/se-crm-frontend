@@ -175,7 +175,7 @@ export default function AccountantCashierPage() {
                 <select value={form.contractor_id} onChange={e => setForm({...form, contractor_id: e.target.value})}
                   style={{ width:'100%', padding:'10px 12px', border:'1px solid #d1d5db', borderRadius:8, fontSize:14 }}>
                   <option value="">Выберите исполнителя</option>
-                  {contractors.map(c => <option key={c.id} value={c.id}>{c.full_name} ({TYPE_LABELS[c.contractor_type] || '—'})</option>)}
+                  {contractors.map(c => <option key={c.id} value={c.id}>{c.name} ({TYPE_LABELS[c.type] || TYPE_LABELS[c.contractor_type] || '—'})</option>)}
                 </select>
               </div>
               <div>
