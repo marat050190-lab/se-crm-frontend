@@ -89,7 +89,7 @@ export default function LeadDetailPage() {
     setSendingEmail(false);
   };
 
-  const HISTORY_ICONS = { created: '+', status_change: '↔', comment: '💬', field_update: '✏️', task_created: '!', task_done: '✓', email: '@', email_sent: '→', note: '@' };
+  const HISTORY_ICONS = { created: '+', status_change: '↔', comment: '●', field_update: '✎', task_created: '!', task_done: '✓', email: '@', email_sent: '→', note: '@' };
 
   return (
     <>
@@ -108,7 +108,7 @@ export default function LeadDetailPage() {
                 <button className="btn btn-primary btn-sm" onClick={saveForm} disabled={saving}>{saving ? 'Сохранение...' : 'Сохранить'}</button>
                 <button className="btn btn-secondary btn-sm" onClick={() => { setEditing(false); setForm(lead); }}>Отмена</button>
               </>
-            : <button className="btn btn-secondary btn-sm" onClick={() => setEditing(true)}>✏️ Редактировать</button>
+            : <button className="btn btn-secondary btn-sm" onClick={() => setEditing(true)}>Редактировать</button>
           }
         </div>
       </div>
@@ -120,7 +120,7 @@ export default function LeadDetailPage() {
               {[
                 { key:'email', label:'📧 Переписка' },
                 { key:'tasks', label:'✓ Задачи' },
-                { key:'comment', label:'💬 Комментарий' },
+                { key:'comment', label:'Комментарий' },
                 { key:'history', label:'📋 История' },
                 { key:'docs', label:'📎 Документы' },
               ].map(tab => (
@@ -168,7 +168,7 @@ export default function LeadDetailPage() {
                 </div>
                 {lead.beeline_call_id && (
                   <div className="mt-3" style={{ padding: '8px 12px', background: 'var(--gray-50)', borderRadius: 6, fontSize: 12, color: 'var(--gray-600)' }}>
-                    📞 Звонок Билайн: {lead.beeline_call_id}
+                    Звонок Билайн: {lead.beeline_call_id}
                     {lead.beeline_record_url && <> · <a href={lead.beeline_record_url} target="_blank" rel="noreferrer" style={{ color: 'var(--brand)' }}>Прослушать запись</a></>}
                   </div>
                 )}
@@ -344,7 +344,7 @@ export default function LeadDetailPage() {
               {[
                 { key:'email', label:'📧 Переписка' },
                 { key:'tasks', label:'✓ Задачи' },
-                { key:'comment', label:'💬 Комментарий' },
+                { key:'comment', label:'Комментарий' },
                 { key:'history', label:'📋 История' },
                 { key:'docs', label:'📎 Документы' },
               ].map(tab => (

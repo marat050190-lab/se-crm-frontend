@@ -235,7 +235,7 @@ export default function DeptDashboardPage({ endpoint, title, tableTitle, embedde
 
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="btn btn-primary" onClick={calc} disabled={loading}>
-              {loading ? 'Загрузка…' : '📊 Рассчитать'}
+              {loading ? 'Загрузка…' : 'Рассчитать'}
             </button>
             <button className="btn btn-ghost" onClick={reset}>Сброс</button>
           </div>

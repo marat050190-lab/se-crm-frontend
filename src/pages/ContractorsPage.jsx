@@ -109,7 +109,7 @@ export default function ContractorsPage() {
                   </span>
                 </td>
                 <td style={{ padding:'14px 16px' }}>
-                  {canEdit && <button onClick={() => openEdit(c)} style={{ background:'none', border:'none', cursor:'pointer', fontSize:'18px' }}>✏️</button>}
+                  {canEdit && <button onClick={() => openEdit(c)} style={{ background:'none', border:'none', cursor:'pointer', fontSize:'18px' }}>Изм.</button>}
                 </td>
               </tr>
             ))}

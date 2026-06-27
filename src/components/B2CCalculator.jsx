@@ -263,7 +263,7 @@ function FreightCalc({ onApply }) {
 
 // ===== ГЛАВНЫЙ КОМПОНЕНТ =====
 const CALC_TYPES = [
-  { value: 'movers', label: '👷 Грузчики', services: ['movers', 'moving_apartment', 'moving_office'] },
+  { value: 'movers', label: 'Грузчики', services: ['movers', 'moving_apartment', 'moving_office'] },
   { value: 'rigging', label: '⚙️ Такелаж', services: ['rigging'] },
   { value: 'freight', label: '🚛 Перевозка', services: ['freight'] },
 ];

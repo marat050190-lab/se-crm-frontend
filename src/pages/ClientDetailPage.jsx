@@ -58,7 +58,7 @@ export default function ClientDetailPage() {
               <button onClick={() => { setEditing(false); setForm(client); }} style={{ padding: '8px 18px', border: '1px solid #d1d5db', borderRadius: 8, background: '#fff', cursor: 'pointer' }}>Отмена</button>
             </>
           ) : (
-            <button onClick={() => setEditing(true)} style={{ padding: '8px 18px', border: '1px solid #d1d5db', borderRadius: 8, background: '#fff', cursor: 'pointer', fontWeight: 500 }}>✏️ Редактировать</button>
+            <button onClick={() => setEditing(true)} style={{ padding: '8px 18px', border: '1px solid #d1d5db', borderRadius: 8, background: '#fff', cursor: 'pointer', fontWeight: 500 }}>Редактировать</button>
           )}
         </div>
       </div>

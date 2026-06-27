@@ -73,7 +73,7 @@ export default function UsersPage() {
                       </td>
                       <td>
                         <div style={{ display: 'flex', gap: 4 }}>
-                          <button className="btn btn-ghost btn-sm" onClick={() => setEditUser(u)}>✏️</button>
+                          <button className="btn btn-ghost btn-sm" onClick={() => setEditUser(u)}>Изм.</button>
                           <button className="btn btn-ghost btn-sm" onClick={() => toggleActive(u)}>
                             {u.is_active ? 'Откл.' : 'Вкл.'}
                           </button>

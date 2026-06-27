@@ -131,7 +131,7 @@ export default function ScriptsAdminPage() {
                     </div>
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <button onClick={() => toggleActive(script)} style={{ padding: '6px 10px', background: 'var(--gray-700)', color: 'var(--gray-300)', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}><span style={{display:'flex'}}>{script.is_active ? Icons.eye(14) : Icons.eyeOff(14)}</span></button>
-                      <button onClick={() => openEdit(script)} style={{ padding: '6px 12px', background: 'var(--gray-700)', color: 'var(--gray-200)', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}>✏️ Изменить</button>
+                      <button onClick={() => openEdit(script)} style={{ padding: '6px 12px', background: 'var(--gray-700)', color: 'var(--gray-200)', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}>Изменить</button>
                       <button onClick={() => handleDelete(script.id)} style={{ padding: '6px 10px', background: 'rgba(239,68,68,0.15)', color: '#f87171', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}>🗑</button>
                     </div>
                   </div>

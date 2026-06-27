@@ -5,7 +5,7 @@ const TABS = [
   { key: 'relocation', label: '🚚 Переезд' },
   { key: 'rigging', label: '⚙️ Такелаж' },
   { key: 'garbage', label: '🗑️ Вывоз мусора' },
-  { key: 'objections', label: '💬 Возражения' },
+  { key: 'objections', label: 'Возражения' },
   { key: 'regions', label: '🗺️ Регионы' },
   { key: 'b2b', label: '🏢 B2B' },
 ];
@@ -36,7 +36,7 @@ function DialogLine({ line }) {
         {line.text}
         {line.tip && (
           <div style={{ marginTop: '6px', padding: '6px 8px', background: 'rgba(0,0,0,0.18)', borderRadius: '6px', fontSize: '12px', color: isDispatcher ? C.dispTip : C.cliTip, fontStyle: 'italic' }}>
-            💡 {line.tip}
+            {line.tip}
           </div>
         )}
       </div>
@@ -137,7 +137,7 @@ export default function ScriptsPage() {
 
   return (
     <div style={{ padding: '24px', maxWidth: '900px' }}>
-      <h2 style={{ margin: '0 0 20px', color: C.heading, fontSize: '22px' }}>📞 Скрипты диспетчера</h2>
+      <h2 style={{ margin: '0 0 20px', color: C.heading, fontSize: '22px' }}>Скрипты диспетчера</h2>
       <div style={{ display: 'flex', gap: '6px', marginBottom: '24px', flexWrap: 'wrap' }}>
         {TABS.map(tab => (
           <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: activeTab === tab.key ? '700' : '500', background: activeTab === tab.key ? C.dispBubble : C.sectionBg, color: activeTab === tab.key ? C.dispText : C.cliLabel }}>
