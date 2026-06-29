@@ -340,7 +340,7 @@ tbody tr:hover td { background: var(--gray-50); }
 .modal-footer { padding: 14px 20px; border-top: 1px solid var(--gray-100); display: flex; justify-content: flex-end; gap: 8px; }
 
 /* ===== LEAD DETAIL ===== */
-.lead-detail { display: grid; grid-template-columns: 1fr 420px; gap: 16px; }
+.lead-detail { display: grid; grid-template-columns: 1fr 500px; gap: 16px; }
 
 .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
