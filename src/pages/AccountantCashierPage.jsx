@@ -47,6 +47,15 @@ export default function AccountantCashierPage() {
     } catch(e) { alert('Ошибка: ' + e.message); }
   }
 
+  async function executePayout(id) {
+    if (!window.confirm('Выполнить выплату через Т-Банк?')) return;
+    try {
+      await api.post('/api/payouts/' + id + '/execute');
+      alert('Выплата отправлена в Т-Банк!');
+      load();
+    } catch(e) { alert('Ошибка: ' + (e.response?.data?.error || e.message)); }
+  }
+
   async function markPayoutDone(id) {
     if (!window.confirm('Отметить выплату как выполненную?')) return;
     await api.patch('/api/payouts/' + id + '/status', { status: 'done' });
@@ -153,7 +162,12 @@ export default function AccountantCashierPage() {
                       <td style={{ padding:'14px 16px', fontSize:13, color:'#6b7280' }}>{p.created_at ? new Date(p.created_at).toLocaleDateString('ru') : '—'}</td>
                       <td style={{ padding:'14px 16px' }}>
                         {p.status === 'pending' && (
-                          <button onClick={() => markPayoutDone(p.id)} style={{ padding:'6px 14px', background:'#059669', color:'#fff', border:'none', borderRadius:8, cursor:'pointer', fontSize:12, fontWeight:600 }}>✓ Выполнено</button>
+                          <div style={{ display:'flex', gap:6 }}>
+                            {(p.contractor_type === 'self_employed') && (
+                              <button onClick={() => executePayout(p.id)} style={{ padding:'6px 14px', background:'#00B14F', color:'#fff', border:'none', borderRadius:8, cursor:'pointer', fontSize:12, fontWeight:600 }}>Т-Банк</button>
+                            )}
+                            <button onClick={() => markPayoutDone(p.id)} style={{ padding:'6px 14px', background:'#6b7280', color:'#fff', border:'none', borderRadius:8, cursor:'pointer', fontSize:12, fontWeight:600 }}>✓ Вручную</button>
+                          </div>
                         )}
                       </td>
                     </tr>
