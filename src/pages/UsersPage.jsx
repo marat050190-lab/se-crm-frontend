@@ -20,7 +20,7 @@ export default function UsersPage() {
   const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editUser, setEditUser] = useState(null);
-  const canEdit = ['super_admin', 'admin'].includes(currentUser?.role);
+  const canEdit = ['super_admin', 'admin', 'rop'].includes(currentUser?.role);
 
   const load = () => api.get('/api/users').then(r => setUsers(r.data));
   useEffect(() => { load(); }, []);
