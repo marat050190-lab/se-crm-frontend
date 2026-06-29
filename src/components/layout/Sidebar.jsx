@@ -56,11 +56,12 @@ export default function Sidebar({ open, onClose }) {
           {(isAdmin || isRop || isB2b) && <NavItem to="/pipeline" icon={Icons.funnel()} label="Воронка" onClick={close} />}
           {!isAccCashier && !isAcc && <NavItem to="/tasks" icon={Icons.tasks()} label="Мои задачи" onClick={close} />}
           {!isAccCashier && !isAcc && <NavItem to="/clients" icon={Icons.clients()} label="Клиенты" onClick={close} />}
-          {(isAdmin || isRop || isCsHead || isCs || isAcc || isAccCashier) && <NavItem to="/orders" icon={Icons.orders()} label="Заявки КС" onClick={close} />}
+          {(isAdmin || isRop || isCsHead || isAcc || isAccCashier) && <NavItem to="/orders" icon={Icons.orders()} label="Заявки КС" onClick={close} />}
+          {isCs && <NavItem to="/orders" icon={Icons.orders()} label="Мои заявки" onClick={close} />}
           {(isAdmin || isRop || isCsHead) && <NavItem to="/users" icon={Icons.users()} label="Сотрудники" onClick={close} />}
           {(isAdmin || isDispatcher) && <NavItem to="/pricing" icon={Icons.price()} label="Прайс" onClick={close} />}
           {(isAdmin || isDispatcher || isB2b) && <NavItem to="/scripts" icon={Icons.scripts()} label="Скрипты" onClick={close} />}
-          {(isCsHead || isCs) && <NavItem to="/cs-dashboard" icon={Icons.chart()} label="Дашборд КС" onClick={close} />}
+          {isCsHead && <NavItem to="/cs-dashboard" icon={Icons.chart()} label="Дашборд КС" onClick={close} />}
           {isMfl && <NavItem to="/mfl-dashboard" icon={Icons.chart()} label="Дашборд МФЛ" onClick={close} />}
           {isCsHead && <NavItem to="/scripts" icon={Icons.scripts()} label="Скрипты" onClick={close} />}
           {(isAdmin || isCsHead || isCs) && <NavItem to="/contractors" icon={Icons.workers()} label="Исполнители" onClick={close} />}
