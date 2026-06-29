@@ -130,8 +130,25 @@ export default function EmailThread({ leadId, clientEmail }) {
           <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
             <input value={form.to} onChange={e => setForm(f => ({...f, to: e.target.value}))} placeholder="Кому (email)" style={inp} />
             <input value={form.subject} onChange={e => setForm(f => ({...f, subject: e.target.value}))} placeholder="Тема" style={inp} />
-            <textarea value={form.text} onChange={e => setForm(f => ({...f, text: e.target.value}))}
-              placeholder="Текст письма..." rows={6} style={{ ...inp, resize:'vertical', fontFamily:'inherit', lineHeight:1.5 }} />
+            <div style={{ border:'1px solid #d1d5db', borderRadius:8, overflow:'hidden' }}>
+              <div style={{ display:'flex', gap:4, padding:'6px 8px', borderBottom:'1px solid #e5e7eb', background:'#f9fafb', flexWrap:'wrap' }}>
+                {[['bold','𝐁'],['italic','𝐼'],['underline','U'],['strikeThrough','S']].map(([cmd,label]) => (
+                  <button key={cmd} type="button" onMouseDown={e => { e.preventDefault(); document.execCommand(cmd); }}
+                    style={{ padding:'2px 8px', border:'1px solid #d1d5db', borderRadius:4, background:'#fff', cursor:'pointer', fontSize:13, fontWeight:cmd==='bold'?700:400, fontStyle:cmd==='italic'?'italic':'normal', textDecoration:cmd==='underline'?'underline':cmd==='strikeThrough'?'line-through':'none' }}>
+                    {label}
+                  </button>
+                ))}
+                <select onChange={e => { document.execCommand('fontSize', false, e.target.value); e.target.value=''; }}
+                  style={{ padding:'2px 6px', border:'1px solid #d1d5db', borderRadius:4, fontSize:13, background:'#fff' }}>
+                  <option value="">Размер</option>
+                  {[['1','Мелкий'],['3','Обычный'],['5','Крупный'],['7','Очень крупный']].map(([v,l]) => <option key={v} value={v}>{l}</option>)}
+                </select>
+              </div>
+              <div contentEditable suppressContentEditableWarning
+                onInput={e => setForm(f => ({...f, text: e.currentTarget.innerHTML}))}
+                style={{ minHeight:150, padding:'10px 12px', fontSize:14, fontFamily:'inherit', outline:'none', lineHeight:1.6 }}
+              />
+            </div>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
               <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                 <button onClick={() => fileRef.current?.click()} style={{ padding:'6px 12px', border:'1px solid #d1d5db', borderRadius:8, background:'#fff', cursor:'pointer', fontSize:12 }}>
