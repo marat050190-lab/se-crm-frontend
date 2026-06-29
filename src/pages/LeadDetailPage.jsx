@@ -288,12 +288,24 @@ export default function LeadDetailPage() {
             )}
             <div className="form-group">
                     <label className="form-label">Ответственный</label>
-                    {editing
-                      ? <select className="form-control" value={form.assigned_to || ''} onChange={e => set('assigned_to', e.target.value)}>
-                          <option value="">— не назначен —</option>
-                          {users.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
-                        </select>
-                      : <div className="df-value">{lead.assigned_name || <span className="df-value empty">—</span>}</div>
+                    {editing && currentUser?.role === 'b2b_manager' ? (
+                      lead.status === 'b2b_approved'
+                        ? <select className="form-control" value={form.assigned_to || ''} onChange={e => set('assigned_to', e.target.value)}>
+                            <option value="">— не назначен —</option>
+                            {users.filter(u => ['cs_manager','mfl_manager'].includes(u.role)).map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
+                          </select>
+                        : <div>
+                            <div className="df-value">{lead.assigned_name || '—'}</div>
+                            <div style={{ marginTop:6, padding:'8px 12px', background:'#fef3c7', borderRadius:8, fontSize:12, color:'#92400e' }}>
+                              ⚠️ Чтобы передать клиента в КС или МФЛ, сначала поставьте статус «B2B Согласован»
+                            </div>
+                          </div>
+                    ) : editing ? (
+                      <select className="form-control" value={form.assigned_to || ''} onChange={e => set('assigned_to', e.target.value)}>
+                        <option value="">— не назначен —</option>
+                        {users.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
+                      </select>
+                    ) : <div className="df-value">{lead.assigned_name || <span className="df-value empty">—</span>}</div>
                     }
                   </div>
                 </div>
