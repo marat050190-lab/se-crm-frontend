@@ -122,7 +122,8 @@ export default function EmailThread({ leadId, clientEmail }) {
       </div>
 
       {showCompose && (
-        <div style={{ borderTop:'2px solid #2563eb', background:'#fff', padding:'16px 20px' }}>
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.6)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2000 }}>
+        <div style={{ background:'#fff', borderRadius:16, width:'680px', maxWidth:'95vw', maxHeight:'90vh', display:'flex', flexDirection:'column', overflow:'hidden', boxShadow:'0 20px 60px rgba(0,0,0,0.3)', padding:'20px' }}>
           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:12 }}>
             <div style={{ fontWeight:600, fontSize:14 }}>Новое письмо</div>
             <button onClick={() => setShowCompose(false)} style={{ background:'none', border:'none', cursor:'pointer', color:'#9ca3af', fontSize:18 }}>✕</button>
@@ -166,6 +167,7 @@ export default function EmailThread({ leadId, clientEmail }) {
               </div>
             </div>
           </div>
+        </div>
         </div>
       )}
     </div>
