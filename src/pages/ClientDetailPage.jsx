@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../hooks/useAuth.jsx';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../utils/api.jsx';
 
@@ -13,8 +14,11 @@ export default function ClientDetailPage() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({});
+  const [users, setUsers] = useState([]);
+  const { user: currentUser } = useAuth();
 
   useEffect(() => {
+    api.get('/api/users').then(r => setUsers(r.data)).catch(() => {});
     api.get('/api/clients/' + id).then(r => {
       setClient(r.data.client);
       setForm(r.data.client);
@@ -84,6 +88,19 @@ export default function ClientDetailPage() {
               <div>
                 <div style={lbl}>ИНН</div>
                 {editing ? <input value={form.inn || ''} onChange={e => setForm(f => ({...f, inn: e.target.value}))} style={inp} /> : <div style={{ fontSize: 14 }}>{client.inn || '—'}</div>}
+              </div>
+              <div>
+                <div style={lbl}>Менеджер</div>
+                {editing && ['rop','super_admin','admin'].includes(currentUser?.role) ? (
+                  <select value={form.manager_id || ''} onChange={e => setForm(f => ({...f, manager_id: e.target.value}))} style={inp}>
+                    <option value="">— не назначен —</option>
+                    {users.filter(u => ['b2b_manager','mfl_manager','dispatcher','cs_manager'].includes(u.role)).map(u => (
+                      <option key={u.id} value={u.id}>{u.name}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <div style={{ fontSize: 14 }}>{client.manager_name || '—'}</div>
+                )}
               </div>
               <div>
                 <div style={lbl}>Тип</div>
