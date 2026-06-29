@@ -139,7 +139,7 @@ export default function LeadDetailPage() {
             </div>
           </div>
         ) : (
-        <div className="lead-detail">
+        <div className="lead-detail" style={{ minHeight: "calc(100vh - 200px)" }}>
           <div>
             {/* Contact */}
             <div className="card" style={{ marginBottom: 16 }}>
