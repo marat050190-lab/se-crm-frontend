@@ -5,6 +5,7 @@ import EmailThread from '../components/EmailThread';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../utils/api.jsx';
+import { useAuth } from '../hooks/useAuth.jsx';
 import {
   STATUSES, SERVICE_TYPES, TASK_TYPES, CLIENT_TYPES, SOURCES,
   DISPATCHER_STATUSES_POSITIVE, DISPATCHER_STATUSES_NEGATIVE, B2B_STATUSES
@@ -16,6 +17,7 @@ const fmtDateTime = d => d ? new Date(d).toLocaleString('ru-RU', { day: '2-digit
 export default function LeadDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user: currentUser } = useAuth();
   const [data, setData] = useState(null);
   const [users, setUsers] = useState([]);
   const [editing, setEditing] = useState(false);
