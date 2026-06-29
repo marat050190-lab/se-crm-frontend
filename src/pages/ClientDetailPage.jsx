@@ -91,10 +91,16 @@ export default function ClientDetailPage() {
               </div>
               <div>
                 <div style={lbl}>Менеджер</div>
-                {editing && ['rop','super_admin','admin'].includes(currentUser?.role) ? (
+                {editing && ['rop','super_admin','admin','b2b_manager'].includes(currentUser?.role) ? (
                   <select value={form.manager_id || ''} onChange={e => setForm(f => ({...f, manager_id: e.target.value}))} style={inp}>
                     <option value="">— не назначен —</option>
-                    {users.filter(u => ['b2b_manager','mfl_manager','dispatcher','cs_manager'].includes(u.role)).map(u => (
+                    {users.filter(u => {
+                      if (client.lead_status === 'b2b_approved') {
+                        return ['cs_manager','mfl_manager'].includes(u.role);
+                      } else {
+                        return u.role === 'b2b_manager';
+                      }
+                    }).map(u => (
                       <option key={u.id} value={u.id}>{u.name}</option>
                     ))}
                   </select>
