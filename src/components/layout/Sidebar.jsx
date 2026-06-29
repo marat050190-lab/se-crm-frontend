@@ -48,23 +48,23 @@ export default function Sidebar({ open, onClose }) {
           </div>
         </div>
         <nav className="sidebar-nav">
-          {isCs && <NavItem to="/my-dashboard" icon={Icons.dashboard()} label="Мой дашборд" onClick={close} />}
+          {(isCs || isMfl) && <NavItem to="/my-dashboard" icon={Icons.dashboard()} label="Мой дашборд" onClick={close} />}
           {(isAdmin || isRop) && <NavItem to="/" icon={Icons.dashboard()} label="Дашборд" onClick={close} />}
-          {(isAdmin || isRop || isDispatcher || isB2b || isMfl) && <NavItem to="/leads" icon={Icons.leads()} label="Лиды" onClick={close} />}
+          {(isAdmin || isRop || isDispatcher || isB2b) && <NavItem to="/leads" icon={Icons.leads()} label="Лиды" onClick={close} />}
           {isDispatcher && <NavItem to="/queue" icon={Icons.funnel()} label="Очередь" onClick={close} />}
           {(isDispatcher || isB2b) && <NavItem to="/my-stats" icon={Icons.kpi()} label="Мои KPI" onClick={close} />}
           {(isAdmin || isRop || isB2b) && <NavItem to="/pipeline" icon={Icons.funnel()} label="Воронка" onClick={close} />}
           {!isAccCashier && !isAcc && <NavItem to="/tasks" icon={Icons.tasks()} label="Мои задачи" onClick={close} />}
           {!isAccCashier && !isAcc && <NavItem to="/clients" icon={Icons.clients()} label="Клиенты" onClick={close} />}
           {(isAdmin || isRop || isCsHead || isAcc || isAccCashier) && <NavItem to="/orders" icon={Icons.orders()} label="Заявки КС" onClick={close} />}
-          {isCs && <NavItem to="/orders" icon={Icons.orders()} label="Мои заявки" onClick={close} />}
+          {(isCs || isMfl) && <NavItem to="/orders" icon={Icons.orders()} label="Мои заявки" onClick={close} />}
           {(isAdmin || isRop || isCsHead) && <NavItem to="/users" icon={Icons.users()} label="Сотрудники" onClick={close} />}
           {(isAdmin || isDispatcher) && <NavItem to="/pricing" icon={Icons.price()} label="Прайс" onClick={close} />}
           {(isAdmin || isDispatcher || isB2b) && <NavItem to="/scripts" icon={Icons.scripts()} label="Скрипты" onClick={close} />}
           {isCsHead && <NavItem to="/cs-dashboard" icon={Icons.chart()} label="Дашборд КС" onClick={close} />}
-          {isMfl && <NavItem to="/mfl-dashboard" icon={Icons.chart()} label="Дашборд МФЛ" onClick={close} />}
+          
           {isCsHead && <NavItem to="/scripts" icon={Icons.scripts()} label="Скрипты" onClick={close} />}
-          {(isAdmin || isCsHead || isCs) && <NavItem to="/contractors" icon={Icons.workers()} label="Исполнители" onClick={close} />}
+          {(isAdmin || isCsHead || isCs || isMfl) && <NavItem to="/contractors" icon={Icons.workers()} label="Исполнители" onClick={close} />}
           {(isAdmin || isAcc) && <NavItem to="/accountant" icon={Icons.invoice()} label="Счета" onClick={close} />}
           {(isAdmin || isAccCashier) && <NavItem to="/accountant-cashier" icon={Icons.payment()} label="Выплаты" onClick={close} />}
         </nav>
