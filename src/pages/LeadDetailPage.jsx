@@ -480,9 +480,32 @@ export default function LeadDetailPage() {
               </div>
               <div style={{ flex:1 }}>
                 <label style={{ fontSize:13, fontWeight:600, color:'#374151', display:'block', marginBottom:4 }}>Текст письма</label>
-                <textarea style={{ width:'100%', padding:'10px 12px', border:'1px solid #d1d5db', borderRadius:8, fontSize:14, boxSizing:'border-box', resize:'vertical', minHeight:240, fontFamily:'inherit' }}
-                  value={emailForm.text} onChange={e => setEmailForm(f => ({...f, text: e.target.value}))}
-                  placeholder="Добрый день!&#10;&#10;По вашему запросу сообщаем..." />
+                <div style={{ border:'1px solid #d1d5db', borderRadius:8, overflow:'hidden' }}>
+                  <div style={{ display:'flex', gap:4, padding:'6px 8px', borderBottom:'1px solid #e5e7eb', background:'#f9fafb', flexWrap:'wrap' }}>
+                    {[['bold','𝐁'],['italic','𝐼'],['underline','U'],['strikeThrough','S']].map(([cmd,label]) => (
+                      <button key={cmd} type="button" onMouseDown={e => { e.preventDefault(); document.execCommand(cmd); }}
+                        style={{ padding:'2px 8px', border:'1px solid #d1d5db', borderRadius:4, background:'#fff', cursor:'pointer', fontSize:13, fontWeight:cmd==='bold'?700:400, fontStyle:cmd==='italic'?'italic':'normal', textDecoration:cmd==='underline'?'underline':cmd==='strikeThrough'?'line-through':'none' }}>
+                        {label}
+                      </button>
+                    ))}
+                    <select onMouseDown={e => e.stopPropagation()} onChange={e => { document.execCommand('fontSize', false, e.target.value); e.target.value=''; }}
+                      style={{ padding:'2px 6px', border:'1px solid #d1d5db', borderRadius:4, fontSize:13, background:'#fff' }}>
+                      <option value="">Размер</option>
+                      {[['1','Мелкий'],['3','Обычный'],['5','Крупный'],['7','Очень крупный']].map(([v,l]) => <option key={v} value={v}>{l}</option>)}
+                    </select>
+                    {[['justifyLeft','◀'],['justifyCenter','▬'],['justifyRight','▶']].map(([cmd,label]) => (
+                      <button key={cmd} type="button" onMouseDown={e => { e.preventDefault(); document.execCommand(cmd); }}
+                        style={{ padding:'2px 8px', border:'1px solid #d1d5db', borderRadius:4, background:'#fff', cursor:'pointer', fontSize:13 }}>
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  <div contentEditable suppressContentEditableWarning
+                    onInput={e => setEmailForm(f => ({...f, text: e.currentTarget.innerHTML}))}
+                    style={{ minHeight:200, padding:'10px 12px', fontSize:14, fontFamily:'inherit', outline:'none', lineHeight:1.6 }}
+                    dangerouslySetInnerHTML={{ __html: emailForm.text || '' }}
+                  />
+                </div>
               </div>
             </div>
             <div style={{ padding:'16px 24px', borderTop:'1px solid #e5e7eb', display:'flex', justifyContent:'space-between', alignItems:'center', background:'#f9fafb' }}>
