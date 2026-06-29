@@ -20,6 +20,8 @@ export default function UsersPage() {
   const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editUser, setEditUser] = useState(null);
+  const { user: currentUser } = useAuth();
+  const canEdit = ['super_admin', 'admin'].includes(currentUser?.role);
 
   const load = () => api.get('/api/users').then(r => setUsers(r.data));
   useEffect(() => { load(); }, []);
@@ -33,7 +35,7 @@ export default function UsersPage() {
     <>
       <div className="page-header">
         <h2>Сотрудники <span className="text-muted" style={{ fontWeight: 400, fontSize: 15 }}>({users.length})</span></h2>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>+ Добавить</button>
+        {canEdit && <button className="btn btn-primary" onClick={() => setShowModal(true)}>+ Добавить</button>}
       </div>
       <div className="page-body">
         <div className="card">
@@ -73,7 +75,7 @@ export default function UsersPage() {
                       </td>
                       <td>
                         <div style={{ display: 'flex', gap: 4 }}>
-                          <button className="btn btn-ghost btn-sm" onClick={() => setEditUser(u)}>Изм.</button>
+                          {canEdit && <button className="btn btn-ghost btn-sm" onClick={() => setEditUser(u)}>Изм.</button>}
                           <button className="btn btn-ghost btn-sm" onClick={() => toggleActive(u)}>
                             {u.is_active ? 'Откл.' : 'Вкл.'}
                           </button>
