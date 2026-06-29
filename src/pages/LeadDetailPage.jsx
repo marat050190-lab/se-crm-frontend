@@ -338,7 +338,7 @@ export default function LeadDetailPage() {
           </div>
 
           {/* RIGHT — вкладки */}
-          <div style={{ display:'flex', flexDirection:'column', minHeight:600 }}>
+          <div style={{ display:'flex', flexDirection:'column', minHeight:'calc(100vh - 180px)', position:'sticky', top:0 }}>
             {/* Табы */}
             <div style={{ display:'flex', borderBottom:'2px solid #e5e7eb', marginBottom:0, background:'#fff', borderRadius:'12px 12px 0 0', overflow:'hidden' }}>
               {[
