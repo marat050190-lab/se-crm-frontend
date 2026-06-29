@@ -53,7 +53,7 @@ export default function UsersPage() {
                 </tr>
               </thead>
               <tbody>
-                {users.map(u => {
+                {users.filter(u => currentUser?.role === "rop" ? ["dispatcher","b2b_manager","mfl_manager"].includes(u.role) : true).map(u => {
                   const rc = ROLE_COLORS[u.role] || { bg: '#F3F4F6', color: '#6B7280' };
                   return (
                     <tr key={u.id}>
