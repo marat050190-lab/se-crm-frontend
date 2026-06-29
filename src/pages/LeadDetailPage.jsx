@@ -316,11 +316,11 @@ export default function LeadDetailPage() {
             {/* Табы */}
             <div style={{ display:'flex', borderBottom:'2px solid #e5e7eb', marginBottom:0, background:'#fff', borderRadius:'12px 12px 0 0', overflow:'hidden' }}>
               {[
-                { key:'email', label:'📧 Переписка' },
+                { key:'email', label:'📧 Почта' },
                 { key:'tasks', label:'✓ Задачи' },
-                { key:'comment', label:'Комментарий' },
+                { key:'comment', label:'💬 Коммент' },
                 { key:'history', label:'📋 История' },
-                { key:'docs', label:'📎 Документы' },
+                { key:'docs', label:'📎 Файлы' },
               ].map(tab => (
                 <button key={tab.key} onClick={() => setActiveTab(tab.key)}
                   style={{ padding:'12px 16px', border:'none', cursor:'pointer', fontSize:13, fontWeight: activeTab===tab.key ? 600 : 400,
