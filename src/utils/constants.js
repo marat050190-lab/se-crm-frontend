@@ -78,4 +78,5 @@ export const ROLES = {
   cs_manager:         'Менеджер КС',
   accountant_cashier: 'Бухгалтер-кассир',
   accountant:         'Бухгалтер',
+  debt_specialist:    'Специалист по дебиторке',
 };
