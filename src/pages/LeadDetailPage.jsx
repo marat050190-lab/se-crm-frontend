@@ -303,7 +303,7 @@ export default function LeadDetailPage() {
                   {editing
                     ? <textarea className="form-control" rows={3} value={form.comment || ''} onChange={e => set('comment', e.target.value)} />
                     : <div style={{ padding: '8px 0', fontSize: 14, color: lead.comment ? 'var(--gray-800)' : 'var(--gray-400)', whiteSpace: 'pre-wrap' }}>
-                        {lead.comment || '—'}
+                        {(lead.comment || '—').replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim()}
                       </div>
                   }
                 </div>
