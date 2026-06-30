@@ -176,8 +176,8 @@ export default function OrdersPage() {
                 </td>
                 <td style={td}><span style={badge(o.status)}>{STATUS_LABELS[o.status] || o.status}</span></td>
                 <td style={td}>
-                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                    <select value={o.status} onChange={e => changeStatus(o.id, e.target.value)} style={{ ...input, padding: '6px 8px', fontSize: 13 }}>
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                    <select value={o.status} onChange={e => changeStatus(o.id, e.target.value)} style={{ ...input, padding: '6px 8px', fontSize: 13, minWidth: 0, maxWidth: 160 }}>
                       {Object.keys(STATUS_LABELS).map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
                     </select>
                     <button type="button" onClick={() => setFilesOrder(o)} title="Документы" style={{ ...input, padding: '6px 10px', cursor: 'pointer', background: '#f0f9ff', borderColor: '#2563eb' }}>📎</button>
@@ -253,5 +253,5 @@ const th = { textAlign: 'left', padding: '12px 16px', background: '#f9fafb', bor
 const td = { padding: '12px 16px', borderBottom: '1px solid #f3f4f6', fontSize: 14 };
 function badge(status) {
   const colors = { new: '#dbeafe', invoice: '#fef3c7', pay_executor: '#fed7aa', paid: '#d1fae5', done: '#e5e7eb', cancelled: '#fee2e2' };
-  return { padding: '4px 10px', borderRadius: 12, fontSize: 12, background: colors[status] || '#e5e7eb' };
+  return { display: 'inline-block', whiteSpace: 'nowrap', padding: '4px 10px', borderRadius: 12, fontSize: 12, background: colors[status] || '#e5e7eb' };
 }
