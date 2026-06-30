@@ -71,7 +71,7 @@ function AutoInput({ value, onChange, placeholder, suggestFn }) {
         onBlur={e => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
       />
       {open && (
-        <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid var(--border)', borderRadius: 8, boxShadow: 'var(--shadow-md)', zIndex: 100, maxHeight: 220, overflowY: 'auto', marginTop: 2 }}>
+        <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid var(--border)', borderRadius: 8, boxShadow: 'var(--shadow-md)', zIndex: 100, maxHeight: 320, overflowY: 'auto', marginTop: 2 }}>
           {suggests.map((s, i) => (
             <div key={i} onClick={() => { onChange(typeof s === 'string' ? s : s.name); setOpen(false); }}
               style={{ padding: '9px 14px', cursor: 'pointer', fontSize: 13, borderBottom: '1px solid var(--gray-100)' }}
