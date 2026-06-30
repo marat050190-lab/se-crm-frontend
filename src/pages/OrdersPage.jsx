@@ -148,7 +148,7 @@ export default function OrdersPage() {
         <table style={table}>
           <thead>
             <tr>
-              <th style={th}>Клиент</th><th style={th}>Услуга</th><th style={th}>Юрлицо</th>
+              <th style={th}>Клиент</th><th style={th}>Услуга</th><th style={th}>Адрес</th><th style={th}>Юрлицо</th>
               <th style={th}>Выручка</th><th style={th}>Прибыль</th><th style={th}>Исполнитель</th><th style={th}>Статус</th><th style={th}>Действие</th>
             </tr>
           </thead>
@@ -157,6 +157,7 @@ export default function OrdersPage() {
               <tr key={o.id}>
                 <td style={td}>{o.client_name || '—'}</td>
                 <td style={td}>{o.service_type}</td>
+                <td style={td}>{o.address || '—'}</td>
                 <td style={td}>{o.legal_entity === 'ooo' ? 'ООО СЭ' : 'ИП'}</td>
                 <td style={td}>{Number(o.revenue).toLocaleString('ru')} ₽</td>
                 <td style={{ ...td, color: o.net_profit >= 0 ? '#059669' : '#dc2626', fontWeight: 600 }}>{Number(o.net_profit).toLocaleString('ru')} ₽</td>
@@ -189,7 +190,7 @@ export default function OrdersPage() {
                 </td>
               </tr>
             ))}
-            {!orders.length && <tr><td colSpan={8} style={{ ...td, textAlign: 'center', color: '#888' }}>Заявок пока нет</td></tr>}
+            {!orders.length && <tr><td colSpan={9} style={{ ...td, textAlign: 'center', color: '#888' }}>Заявок пока нет</td></tr>}
           </tbody>
         </table>
       )}
