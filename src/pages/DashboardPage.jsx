@@ -7,7 +7,6 @@ import DeptDashboardPage from './DeptDashboardPage.jsx';
 const TABS = [
   { key: 'sales', label: 'Отдел продаж' },
   { key: 'cs', label: 'Клиентский сервис' },
-  { key: 'mfl', label: 'МФЛ' },
 ];
 
 export default function DashboardPage() {
@@ -70,7 +69,6 @@ export default function DashboardPage() {
       <div className="page-body">
         {tab === 'sales' && <SalesDashboard stats={stats} tasks={tasks} recentLeads={recentLeads} convRate={convRate} />}
         {tab === 'cs' && <DeptDashboardPage embedded endpoint="/api/stats/cs" title="" tableTitle="Отдел по работе с клиентами" />}
-        {tab === 'mfl' && <DeptDashboardPage embedded endpoint="/api/stats/mfl" title="" tableTitle="МФЛ менеджеры" />}
       </div>
     </>
   );
