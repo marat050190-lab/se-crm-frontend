@@ -86,31 +86,50 @@ function AutoInput({ value, onChange, placeholder, suggestFn }) {
   );
 }
 
+function smoothPath(points) {
+  if (points.length < 2) return '';
+  let d = `M${points[0][0].toFixed(1)},${points[0][1].toFixed(1)}`;
+  for (let i = 0; i < points.length - 1; i++) {
+    const [x0, y0] = points[i];
+    const [x1, y1] = points[i + 1];
+    const cx = (x0 + x1) / 2;
+    d += ` C${cx.toFixed(1)},${y0.toFixed(1)} ${cx.toFixed(1)},${y1.toFixed(1)} ${x1.toFixed(1)},${y1.toFixed(1)}`;
+  }
+  return d;
+}
+
 function LineChart({ data }) {
   if (!data || data.length === 0) {
-    return <div style={{ height: 240, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9CA3AF' }}>Нет данных за выбранный период</div>;
+    return <div style={{ height: 260, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9CA3AF' }}>Нет данных за выбранный период</div>;
   }
-  const W = 900, H = 240, padL = 60, padR = 20, padT = 20, padB = 30;
+  const W = 900, H = 260, padL = 70, padR = 20, padT = 20, padB = 34;
   const maxV = Math.max(1, ...data.map(d => Math.max(d.revenue, d.net_profit)));
   const x = (idx) => padL + (data.length === 1 ? 0 : (idx / (data.length - 1)) * (W - padL - padR));
   const y = (v) => H - padB - (v / maxV) * (H - padT - padB);
-  const path = (key) => data.map((d, idx) => `${idx === 0 ? 'M' : 'L'}${x(idx).toFixed(1)},${y(d[key]).toFixed(1)}`).join(' ');
+  const points = (key) => data.map((d, idx) => [x(idx), y(d[key])]);
+
   return (
     <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto' }}>
       {Array.from({ length: 5 }).map((_, g) => {
         const gy = padT + (g / 4) * (H - padT - padB);
         return <g key={g}>
-          <line x1={padL} y1={gy} x2={W - padR} y2={gy} stroke="#EEE" strokeWidth="1" />
-          <text x={padL - 8} y={gy + 4} textAnchor="end" fontSize="11" fill="#9CA3AF">{fmt(Math.round(maxV * (1 - g / 4)))}</text>
+          <line x1={padL} y1={gy} x2={W - padR} y2={gy} stroke="#F1F3F5" strokeWidth="1" />
+          <text x={padL - 10} y={gy + 4} textAnchor="end" fontSize="11" fill="#ADB5BD">{fmt(Math.round(maxV * (1 - g / 4)))}</text>
         </g>;
       })}
-      {data.map((d, idx) => (idx % Math.ceil(data.length / 12 || 1) === 0) && (
-        <text key={idx} x={x(idx)} y={H - 8} textAnchor="middle" fontSize="10" fill="#9CA3AF">
+      {data.map((d, idx) => (idx % Math.ceil(data.length / 10 || 1) === 0) && (
+        <text key={idx} x={x(idx)} y={H - 10} textAnchor="middle" fontSize="10" fill="#ADB5BD">
           {String(d.day).slice(8, 10)}.{String(d.day).slice(5, 7)}
         </text>
       ))}
-      <path d={path('revenue')} fill="none" stroke="#2563EB" strokeWidth="2" />
-      <path d={path('net_profit')} fill="none" stroke="#059669" strokeWidth="2" strokeDasharray="5 4" />
+      <path d={smoothPath(points('revenue'))} fill="none" stroke="#2563EB" strokeWidth="2.5" strokeLinecap="round" />
+      <path d={smoothPath(points('net_profit'))} fill="none" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" />
+      {points('revenue').map(([px, py], idx) => (
+        <circle key={'r'+idx} cx={px} cy={py} r="3" fill="#2563EB" stroke="#fff" strokeWidth="1.5" />
+      ))}
+      {points('net_profit').map(([px, py], idx) => (
+        <circle key={'p'+idx} cx={px} cy={py} r="3" fill="#059669" stroke="#fff" strokeWidth="1.5" />
+      ))}
     </svg>
   );
 }
